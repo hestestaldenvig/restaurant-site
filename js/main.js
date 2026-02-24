@@ -53,29 +53,37 @@ const bindPdfResizeHandler = () => {
 };
 
 const renderPdfToGrid = async (pdfUrl, containerElement, statusElement, options = {}) => {
-  if (!containerElement || !statusElement || !window.pdfjsLib) {
+  if (!containerElement || !window.pdfjsLib) {
     return null;
   }
 
   const encodedPdfUrl = encodeURI(pdfUrl);
-  const rendererKey = `${containerElement.id || containerElement.className || 'pdf-container'}::${encodedPdfUrl}`;
+  const loadingMessage = options.loadingMessage || 'Indlæser menu...';
+  const idleMessage = options.idleMessage || 'Vælg arrangementet for at indlæse menuen.';
+  const errorMessage = options.errorMessage || 'Menuen kan ikke vises lige nu. Brug knapperne herover eller kontakt os.';
+  const ariaLabelPrefix = options.ariaLabelPrefix || 'Menu side';
+  const maxPages = Number.isInteger(options.maxPages) ? Math.max(options.maxPages, 1) : null;
+
+  if (!containerElement.dataset.pdfRendererId) {
+    containerElement.dataset.pdfRendererId = `pdf-${Math.random().toString(36).slice(2, 10)}`;
+  }
+
+  const rendererKey = `${containerElement.dataset.pdfRendererId}::${encodedPdfUrl}::${maxPages || 'all'}`;
 
   if (pdfGridRenderers.has(rendererKey)) {
     return pdfGridRenderers.get(rendererKey);
   }
 
-  const loadingMessage = options.loadingMessage || 'Indlæser menu...';
-  const idleMessage = options.idleMessage || 'Vælg arrangementet for at indlæse menuen.';
-  const errorMessage = options.errorMessage || 'Menuen kan ikke vises lige nu. Brug knapperne herover eller kontakt os.';
-  const ariaLabelPrefix = options.ariaLabelPrefix || 'Menu side';
 
   let pdfDocument = null;
   let renderCycle = 0;
 
   const showErrorState = () => {
-    statusElement.textContent = errorMessage;
-    statusElement.classList.add('menu-status-error');
-    statusElement.hidden = false;
+    if (statusElement) {
+      statusElement.textContent = errorMessage;
+      statusElement.classList.add('menu-status-error');
+      statusElement.hidden = false;
+    }
     containerElement.innerHTML = '';
   };
 
@@ -88,17 +96,23 @@ const renderPdfToGrid = async (pdfUrl, containerElement, statusElement, options 
     const activeRenderCycle = renderCycle;
 
     containerElement.innerHTML = '';
-    statusElement.textContent = loadingMessage;
-    statusElement.classList.remove('menu-status-error');
-    statusElement.hidden = false;
+    if (statusElement) {
+      statusElement.textContent = loadingMessage;
+      statusElement.classList.remove('menu-status-error');
+      statusElement.hidden = false;
+    }
 
     const containerWidth = containerElement.clientWidth;
     if (!containerWidth) {
-      statusElement.textContent = idleMessage;
+      if (statusElement) {
+        statusElement.textContent = idleMessage;
+      }
       return;
     }
 
-    for (let pageNumber = 1; pageNumber <= pdfDocument.numPages; pageNumber += 1) {
+    const pageCount = maxPages ? Math.min(pdfDocument.numPages, maxPages) : pdfDocument.numPages;
+
+    for (let pageNumber = 1; pageNumber <= pageCount; pageNumber += 1) {
       const pageHandle = await pdfDocument.getPage(pageNumber);
       const baseViewport = pageHandle.getViewport({ scale: 1 });
 
@@ -131,7 +145,9 @@ const renderPdfToGrid = async (pdfUrl, containerElement, statusElement, options 
       pageWrapper.appendChild(canvas);
     }
 
-    statusElement.hidden = true;
+    if (statusElement) {
+      statusElement.hidden = true;
+    }
   };
 
   const loadAndRender = async () => {
@@ -141,9 +157,11 @@ const renderPdfToGrid = async (pdfUrl, containerElement, statusElement, options 
       }
 
       if (!pdfDocument) {
-        statusElement.textContent = loadingMessage;
-        statusElement.classList.remove('menu-status-error');
-        statusElement.hidden = false;
+        if (statusElement) {
+          statusElement.textContent = loadingMessage;
+          statusElement.classList.remove('menu-status-error');
+          statusElement.hidden = false;
+        }
         const loadingTask = window.pdfjsLib.getDocument(encodedPdfUrl);
         pdfDocument = await loadingTask.promise;
       }
@@ -169,6 +187,27 @@ const renderPdfToGrid = async (pdfUrl, containerElement, statusElement, options 
   bindPdfResizeHandler();
 
   return renderer;
+};
+
+const renderPdfFirstPage = async (pdfUrl, containerElement) => {
+  const renderer = await renderPdfToGrid(pdfUrl, containerElement, null, {
+    maxPages: 1,
+    ariaLabelPrefix: 'PDF forhåndsvisning side',
+  });
+
+  if (renderer) {
+    await renderer.ensureRendered();
+  }
+};
+
+const renderPdfAllPages = async (pdfUrl, containerElement) => {
+  const renderer = await renderPdfToGrid(pdfUrl, containerElement, null, {
+    ariaLabelPrefix: 'PDF side',
+  });
+
+  if (renderer) {
+    await renderer.ensureRendered();
+  }
 };
 
 const initializeMenuPdf = async () => {
@@ -345,17 +384,182 @@ const initializeArrangementSelector = async () => {
 
 initializeArrangementSelector();
 
-const initializeGalleryLightbox = () => {
-  if (document.body.dataset.page !== 'galleri') {
+const formatNewsDate = (dateString) => {
+  const parsedDate = new Date(dateString);
+  if (Number.isNaN(parsedDate.getTime())) {
+    return dateString;
+  }
+
+  return new Intl.DateTimeFormat('da-DK', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  }).format(parsedDate);
+};
+
+const escapeHtml = (value) =>
+  String(value || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+
+const renderNewsImages = (images = []) => {
+  if (!Array.isArray(images) || !images.length) {
+    return '';
+  }
+
+  const imageItems = images
+    .map(
+      (imagePath, index) => `
+      <li>
+        <button type="button" class="gallery-item" data-lightbox-src="${escapeHtml(imagePath)}" data-lightbox-alt="Nyhedsbillede ${index + 1}">
+          <img src="${escapeHtml(imagePath)}" alt="Nyhedsbillede ${index + 1}" loading="lazy" />
+        </button>
+      </li>
+    `,
+    )
+    .join('');
+
+  return `<ul class="gallery-grid gallery-grid--photos news-image-grid">${imageItems}</ul>`;
+};
+
+const fetchNewsPosts = async () => {
+  const response = await fetch('./content/news.json');
+  if (!response.ok) {
+    throw new Error('Kunne ikke hente nyheder.');
+  }
+
+  const newsPosts = await response.json();
+  if (!Array.isArray(newsPosts)) {
+    return [];
+  }
+
+  return newsPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
+};
+
+const initializeNewsOverview = async () => {
+  if (window.location.pathname.split('/').pop() !== 'nyheder.html') {
     return;
   }
 
+  const newsList = document.querySelector('#news-overview-list');
+  if (!newsList) {
+    return;
+  }
+
+  try {
+    const posts = await fetchNewsPosts();
+    if (!posts.length) {
+      newsList.innerHTML = '<p>Der er ingen nyheder endnu.</p>';
+      return;
+    }
+
+    newsList.innerHTML = posts
+      .map(
+        (post) => `
+        <article class="news-item">
+          <p class="meta">${formatNewsDate(post.date)}</p>
+          <h2>${escapeHtml(post.title)}</h2>
+          <p>${escapeHtml(post.excerpt || '')}</p>
+          ${renderNewsImages(post.images)}
+          ${post.pdf ? `<div class="news-pdf-preview" data-news-pdf-preview="${escapeHtml(post.pdf.url)}"></div>` : ''}
+          <a class="news-read-more" href="nyhed.html?id=${encodeURIComponent(post.id)}">Læs mere</a>
+        </article>
+      `,
+      )
+      .join('');
+
+    const pdfPreviewContainers = newsList.querySelectorAll('[data-news-pdf-preview]');
+    pdfPreviewContainers.forEach((container) => {
+      const pdfUrl = container.getAttribute('data-news-pdf-preview');
+      if (pdfUrl) {
+        renderPdfFirstPage(pdfUrl, container);
+      }
+    });
+  } catch (error) {
+    newsList.innerHTML = '<p>Nyhederne kunne ikke indlæses lige nu.</p>';
+  }
+};
+
+initializeNewsOverview();
+
+const initializeSingleNews = async () => {
+  if (window.location.pathname.split('/').pop() !== 'nyhed.html') {
+    return;
+  }
+
+  const article = document.querySelector('#single-news-article');
+  if (!article) {
+    return;
+  }
+
+  const params = new URLSearchParams(window.location.search);
+  const postId = params.get('id');
+
+  if (!postId) {
+    article.innerHTML = '<p>Nyheden blev ikke fundet.</p><a class="news-back-link" href="nyheder.html">Tilbage til nyheder</a>';
+    return;
+  }
+
+  try {
+    const posts = await fetchNewsPosts();
+    const post = posts.find((item) => item.id === postId);
+
+    if (!post) {
+      article.innerHTML = '<p>Nyheden blev ikke fundet.</p><a class="news-back-link" href="nyheder.html">Tilbage til nyheder</a>';
+      return;
+    }
+
+    const bodyParagraphs = String(post.body || '')
+      .split(/\n{2,}/)
+      .map((paragraph) => paragraph.trim())
+      .filter(Boolean)
+      .map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`)
+      .join('');
+
+    article.innerHTML = `
+      <a class="news-back-link" href="nyheder.html">← Tilbage til nyheder</a>
+      <p class="meta">${formatNewsDate(post.date)}</p>
+      <h1>${escapeHtml(post.title)}</h1>
+      ${bodyParagraphs}
+      ${renderNewsImages(post.images)}
+      ${
+        post.pdf
+          ? `
+        <section class="news-pdf-section">
+          <h2>${escapeHtml(post.pdf.title || 'Vedhæftet PDF')}</h2>
+          <div id="news-pdf-pages" class="menu-pages news-pdf-pages"></div>
+          <div class="menu-actions news-pdf-actions">
+            <a class="btn btn-primary" href="${escapeHtml(post.pdf.url)}" target="_blank" rel="noopener">Åbn PDF</a>
+            <a class="btn btn-secondary" href="${escapeHtml(post.pdf.url)}" download>Download PDF</a>
+          </div>
+        </section>
+      `
+          : ''
+      }
+    `;
+
+    if (post.pdf) {
+      const pdfContainer = article.querySelector('#news-pdf-pages');
+      if (pdfContainer) {
+        await renderPdfAllPages(post.pdf.url, pdfContainer);
+      }
+    }
+  } catch (error) {
+    article.innerHTML = '<p>Nyheden kunne ikke indlæses lige nu.</p><a class="news-back-link" href="nyheder.html">Tilbage til nyheder</a>';
+  }
+};
+
+initializeSingleNews();
+
+const initializeGalleryLightbox = () => {
   const lightbox = document.querySelector('#gallery-lightbox');
   const lightboxImage = document.querySelector('#lightbox-image');
-  const galleryTriggers = document.querySelectorAll('.gallery-item');
   const lightboxCloseElements = document.querySelectorAll('[data-lightbox-close]');
 
-  if (!lightbox || !lightboxImage || !galleryTriggers.length) {
+  if (!lightbox || !lightboxImage) {
     return;
   }
 
@@ -379,15 +583,18 @@ const initializeGalleryLightbox = () => {
 
   closeLightbox();
 
-  galleryTriggers.forEach((trigger) => {
-    trigger.addEventListener('click', () => {
-      const source = trigger.dataset.lightboxSrc;
-      const altText = trigger.dataset.lightboxAlt || '';
+  document.addEventListener('click', (event) => {
+    const trigger = event.target.closest('[data-lightbox-src]');
+    if (!trigger) {
+      return;
+    }
 
-      if (source) {
-        openLightbox(source, altText);
-      }
-    });
+    const source = trigger.dataset.lightboxSrc;
+    const altText = trigger.dataset.lightboxAlt || '';
+
+    if (source) {
+      openLightbox(source, altText);
+    }
   });
 
   lightboxCloseElements.forEach((closeElement) => {
