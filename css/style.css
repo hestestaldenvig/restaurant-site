@@ -522,15 +522,17 @@ p + h3 {
   flex-wrap: wrap;
   justify-content: center;
   gap: 0.75rem;
-  margin-top: 0.6rem;
+  margin-top: 1.6rem;
 }
 
 .menu-switch {
   display: inline-flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 0.45rem;
   padding: 0.35rem;
   width: fit-content;
+  margin: 0 auto;
   border-radius: 999px;
   border: 1px solid #dcc5a8;
   background: #f3e5d1;
@@ -539,11 +541,11 @@ p + h3 {
 .menu-switch-tab {
   border: 0;
   border-radius: 999px;
-  padding: 0.45rem 0.9rem;
+  padding: 0.65rem 1rem;
   background: transparent;
   color: var(--muted);
-  font-weight: 700;
-  font-size: 0.95rem;
+  font-weight: 600;
+  font-size: 1rem;
   cursor: pointer;
   transition: background-color 160ms ease, color 160ms ease, box-shadow 160ms ease;
 }
