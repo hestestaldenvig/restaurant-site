@@ -60,7 +60,7 @@ const renderPdfToGrid = async (pdfUrl, containerElement, statusElement, options 
   const encodedPdfUrl = encodeURI(pdfUrl);
   const loadingMessage = options.loadingMessage || 'Indlæser menu...';
   const idleMessage = options.idleMessage || 'Vælg arrangementet for at indlæse menuen.';
-  const errorMessage = options.errorMessage || 'Menuen kan ikke vises lige nu. Brug knapperne herover eller kontakt os.';
+  const baseErrorMessage = options.errorMessage || 'PDF-filen kan ikke vises lige nu.';
   const ariaLabelPrefix = options.ariaLabelPrefix || 'Menu side';
   const maxPages = Number.isInteger(options.maxPages) ? Math.max(options.maxPages, 1) : null;
 
@@ -78,13 +78,23 @@ const renderPdfToGrid = async (pdfUrl, containerElement, statusElement, options 
   let pdfDocument = null;
   let renderCycle = 0;
 
-  const showErrorState = () => {
+  const showErrorState = (message) => {
+    const fallbackMessage = `${baseErrorMessage} (sti: ${pdfUrl})`;
+    const fullMessage = message || fallbackMessage;
+
     if (statusElement) {
-      statusElement.textContent = errorMessage;
+      statusElement.textContent = fullMessage;
       statusElement.classList.add('menu-status-error');
       statusElement.hidden = false;
     }
+
     containerElement.innerHTML = '';
+    if (!statusElement) {
+      const errorNotice = document.createElement('p');
+      errorNotice.className = 'menu-status menu-status-error';
+      errorNotice.textContent = fullMessage;
+      containerElement.appendChild(errorNotice);
+    }
   };
 
   const renderPages = async () => {
@@ -168,7 +178,14 @@ const renderPdfToGrid = async (pdfUrl, containerElement, statusElement, options 
 
       await renderPages();
     } catch (error) {
-      showErrorState();
+      const isMissingPdf =
+        error?.name === 'MissingPDFException'
+        || error?.status === 404
+        || String(error?.message || '').includes('404');
+      const loadErrorMessage = isMissingPdf
+        ? `PDF-filen blev ikke fundet (404): ${pdfUrl}`
+        : `${baseErrorMessage} (sti: ${pdfUrl})`;
+      showErrorState(loadErrorMessage);
     }
   };
 
