@@ -274,3 +274,55 @@ const initializeArrangementSelector = async () => {
 };
 
 initializeArrangementSelector();
+
+const initializeGalleryLightbox = () => {
+  if (document.body.dataset.page !== 'galleri') {
+    return;
+  }
+
+  const lightbox = document.querySelector('#gallery-lightbox');
+  const lightboxImage = document.querySelector('#lightbox-image');
+  const galleryTriggers = document.querySelectorAll('.gallery-item');
+  const lightboxCloseElements = document.querySelectorAll('[data-lightbox-close]');
+
+  if (!lightbox || !lightboxImage || !galleryTriggers.length) {
+    return;
+  }
+
+  const closeLightbox = () => {
+    lightbox.hidden = true;
+    lightboxImage.src = '';
+    lightboxImage.alt = '';
+    document.body.style.overflow = '';
+  };
+
+  const openLightbox = (source, altText) => {
+    lightboxImage.src = source;
+    lightboxImage.alt = altText;
+    lightbox.hidden = false;
+    document.body.style.overflow = 'hidden';
+  };
+
+  galleryTriggers.forEach((trigger) => {
+    trigger.addEventListener('click', () => {
+      const source = trigger.dataset.lightboxSrc;
+      const altText = trigger.dataset.lightboxAlt || '';
+
+      if (source) {
+        openLightbox(source, altText);
+      }
+    });
+  });
+
+  lightboxCloseElements.forEach((closeElement) => {
+    closeElement.addEventListener('click', closeLightbox);
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && !lightbox.hidden) {
+      closeLightbox();
+    }
+  });
+};
+
+initializeGalleryLightbox();
