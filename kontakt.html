@@ -29,16 +29,72 @@
     <main>
       <section class="section">
         <div class="container contact-layout">
-          <div class="card">
+          <article class="card info-card kontakt-card">
             <p class="eyebrow">Kontakt</p>
-            <h1>Kontakt Hestestalden</h1>
-            <p><strong>Adresse:</strong> Ravnsbjergvej 29, 4560 Vig</p>
-            <p><strong>Telefon:</strong> <a href="tel:+4551274438">+45 51 27 44 38</a></p>
-            <p><strong>Email:</strong> <a href="mailto:hestestaldenvig@gmail.com">hestestaldenvig@gmail.com</a></p>
-            <p><strong>Lukket:</strong> Mandag, Tirsdag, Onsdag og Søndag</p>
-            <p><strong>Åben:</strong> Torsdag, Fredag og Lørdag fra 17:30 til 21:00</p>
-          </div>
-          <div class="map-placeholder" role="img" aria-label="Kortplaceholder for Hestestalden">Kort vises her</div>
+            <h1>Kontaktoplysninger</h1>
+            <ul class="kontakt-info-list" aria-label="Kontaktoplysninger for Hestestalden">
+              <li>
+                <span class="kontakt-label">Adresse</span>
+                <span>Ravnsbjergvej 29, 4560 Vig</span>
+              </li>
+              <li>
+                <span class="kontakt-label">Telefon</span>
+                <a href="tel:+4551274438">+45 51 27 44 38</a>
+              </li>
+              <li>
+                <span class="kontakt-label">Email</span>
+                <a href="mailto:hestestaldenvig@gmail.com">hestestaldenvig@gmail.com</a>
+              </li>
+            </ul>
+          </article>
+
+          <article class="card info-card">
+            <h2>Adresse</h2>
+            <p>Ravnsbjergvej 29, 4560 Vig</p>
+            <div class="map-embed">
+              <iframe
+                title="Kort over Ravnsbjergvej 29, 4560 Vig"
+                src="https://www.google.com/maps?q=Ravnsbjergvej+29,+4560+Vig&output=embed"
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+              ></iframe>
+            </div>
+            <a class="btn btn-secondary" href="https://www.google.com/maps/search/?api=1&query=Ravnsbjergvej+29,+4560+Vig" target="_blank" rel="noopener noreferrer">
+              Åbn i Google Maps
+            </a>
+          </article>
+        </div>
+      </section>
+
+      <section class="section kontakt-form-section">
+        <div class="container">
+          <article class="card kontakt-form-card">
+            <h2>Forespørgsel</h2>
+            <form class="kontakt-form" id="kontakt-form" novalidate>
+              <div class="form-field">
+                <label for="foresp-navn">Navn <span aria-hidden="true">*</span></label>
+                <input id="foresp-navn" name="navn" type="text" autocomplete="name" required />
+              </div>
+              <div class="form-field">
+                <label for="foresp-email">Email <span aria-hidden="true">*</span></label>
+                <input id="foresp-email" name="email" type="email" autocomplete="email" required />
+              </div>
+              <div class="form-field">
+                <label for="foresp-telefon">Telefon</label>
+                <input id="foresp-telefon" name="telefon" type="tel" autocomplete="tel" />
+              </div>
+              <div class="form-field form-field--full">
+                <label for="foresp-besked">Besked <span aria-hidden="true">*</span></label>
+                <textarea id="foresp-besked" name="besked" rows="5" required></textarea>
+              </div>
+              <button class="btn btn-primary" type="submit">Send forespørgsel</button>
+              <p class="form-required-note">Felter markeret med * er påkrævede.</p>
+            </form>
+            <p class="form-submit-message" id="foresp-feedback" role="status" aria-live="polite" hidden>
+              Tak! Send venligst din forespørgsel til
+              <a href="mailto:hestestaldenvig@gmail.com">hestestaldenvig@gmail.com</a>
+            </p>
+          </article>
         </div>
       </section>
     </main>
@@ -61,5 +117,23 @@
       </div>
     </footer>
     <script src="js/main.js"></script>
+    <script>
+      const kontaktForm = document.getElementById("kontakt-form");
+      const forespFeedback = document.getElementById("foresp-feedback");
+
+      if (kontaktForm && forespFeedback) {
+        kontaktForm.addEventListener("submit", (event) => {
+          event.preventDefault();
+
+          if (!kontaktForm.checkValidity()) {
+            kontaktForm.reportValidity();
+            return;
+          }
+
+          forespFeedback.hidden = false;
+          kontaktForm.reset();
+        });
+      }
+    </script>
   </body>
 </html>

@@ -655,6 +655,119 @@ p + h3 {
   border: 0;
 }
 
+.kontakt-card h1 {
+  margin-bottom: 1rem;
+}
+
+.kontakt-info-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.95rem;
+}
+
+.kontakt-info-list li {
+  display: grid;
+  gap: 0.2rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid #eee4d7;
+}
+
+.kontakt-info-list li:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.kontakt-label {
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+.kontakt-info-list a {
+  color: var(--primary-dark);
+  font-weight: 700;
+}
+
+.kontakt-info-list a:hover,
+.kontakt-info-list a:focus-visible {
+  color: var(--primary);
+}
+
+.kontakt-form-section {
+  padding-top: 0;
+}
+
+.kontakt-form-card {
+  border-radius: 1rem;
+  padding: 1.4rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.kontakt-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.9rem;
+}
+
+.form-field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.form-field label {
+  font-weight: 700;
+  color: var(--primary-dark);
+}
+
+.form-field input,
+.form-field textarea {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 0.75rem;
+  background: #fffaf0;
+  color: var(--text);
+  padding: 0.7rem 0.85rem;
+  font: inherit;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+.form-field textarea {
+  resize: vertical;
+  min-height: 8rem;
+}
+
+.form-field input:focus-visible,
+.form-field textarea:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-color: #cf954e;
+}
+
+.form-required-note {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.form-submit-message {
+  margin: 0;
+  padding: 0.8rem 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid #d7c1a5;
+  background: #fbf3e7;
+  color: var(--primary-dark);
+  font-weight: 600;
+}
+
+.form-submit-message a {
+  color: var(--primary-dark);
+}
+
 
 .homepage-gallery-preview h2 {
   margin-bottom: 1rem;
@@ -814,6 +927,16 @@ p + h3 {
   .gallery-grid,
   .contact-layout {
     gap: 0.85rem;
+  }
+
+  .kontakt-form {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .form-field--full,
+  .kontakt-form button,
+  .form-required-note {
+    grid-column: 1 / -1;
   }
 
 }
