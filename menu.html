@@ -33,14 +33,12 @@
           <p>Se vores aktuelle menukort herunder. PDF-filen opdateres løbende, så du altid kan finde den nyeste version.</p>
 
           <article class="menu-pdf-card" aria-label="Menukort">
-            <div class="menu-preview-placeholder" role="img" aria-label="Forhåndsvisning af menu">
-              <span>Forhåndsvisning af menu</span>
-            </div>
             <div class="menu-actions">
               <a class="btn btn-primary" href="uploads/menu.pdf" target="_blank" rel="noopener">Åbn menu (PDF)</a>
               <a class="btn btn-secondary" href="uploads/menu.pdf" download>Download menu</a>
             </div>
-            <p class="menu-helper-text">Menuen åbner som PDF og kan nemt udskiftes.</p>
+            <p id="menu-status" class="menu-status" role="status">Indlæser menu...</p>
+            <div id="menu-pages" class="menu-pages" aria-live="polite"></div>
           </article>
         </div>
       </section>
@@ -55,6 +53,7 @@
         <p class="footer-note">© Hestestalden</p>
       </div>
     </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="js/main.js"></script>
   </body>
 </html>
