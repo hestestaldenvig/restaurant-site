@@ -31,18 +31,51 @@
         <div class="container">
           <p class="eyebrow">Galleri</p>
           <h1>Billeder fra restauranten</h1>
-          <div class="gallery-grid">
-            <div class="placeholder">Billede 1</div>
-            <div class="placeholder">Billede 2</div>
-            <div class="placeholder">Billede 3</div>
-            <div class="placeholder">Billede 4</div>
-            <div class="placeholder">Billede 5</div>
-            <div class="placeholder">Billede 6</div>
-          </div>
+          <ul class="gallery-grid gallery-grid--photos" aria-label="Billedgalleri fra Hestestalden">
+            <li>
+              <button type="button" class="gallery-item" data-lightbox-src="uploads/gallery/mad-1.jpg" data-lightbox-alt="Ret fra Hestestalden med sæsonens råvarer">
+                <img src="uploads/gallery/mad-1.jpg" alt="Ret fra Hestestalden med sæsonens råvarer" loading="lazy" />
+              </button>
+            </li>
+            <li>
+              <button type="button" class="gallery-item" data-lightbox-src="uploads/gallery/mad-2.jpg" data-lightbox-alt="Hjemmelavet servering fra køkkenet i Hestestalden">
+                <img src="uploads/gallery/mad-2.jpg" alt="Hjemmelavet servering fra køkkenet i Hestestalden" loading="lazy" />
+              </button>
+            </li>
+            <li>
+              <button type="button" class="gallery-item" data-lightbox-src="uploads/gallery/mad-3.jpg" data-lightbox-alt="Anrettet ret fra Hestestalden i varme nuancer">
+                <img src="uploads/gallery/mad-3.jpg" alt="Anrettet ret fra Hestestalden i varme nuancer" loading="lazy" />
+              </button>
+            </li>
+            <li>
+              <button type="button" class="gallery-item" data-lightbox-src="uploads/gallery/mad-4.jpg" data-lightbox-alt="Rustik tallerkenservering fra Hestestalden">
+                <img src="uploads/gallery/mad-4.jpg" alt="Rustik tallerkenservering fra Hestestalden" loading="lazy" />
+              </button>
+            </li>
+            <li>
+              <button type="button" class="gallery-item" data-lightbox-src="uploads/gallery/mad-5.jpg" data-lightbox-alt="Velsmagende ret fra Hestestalden til frokost og aften">
+                <img src="uploads/gallery/mad-5.jpg" alt="Velsmagende ret fra Hestestalden til frokost og aften" loading="lazy" />
+              </button>
+            </li>
+            <li>
+              <button type="button" class="gallery-item" data-lightbox-src="uploads/gallery/mad-6.jpg" data-lightbox-alt="Klassisk madoplevelse fra Hestestalden">
+                <img src="uploads/gallery/mad-6.jpg" alt="Klassisk madoplevelse fra Hestestalden" loading="lazy" />
+              </button>
+            </li>
+          </ul>
         </div>
       </section>
     </main>
     </div>
+
+    <div class="lightbox" id="gallery-lightbox" hidden>
+      <div class="lightbox-backdrop" data-lightbox-close></div>
+      <figure class="lightbox-content" role="dialog" aria-modal="true" aria-label="Visning af galleri-billede">
+        <button type="button" class="lightbox-close" aria-label="Luk billede" data-lightbox-close>&times;</button>
+        <img src="" alt="" id="lightbox-image" />
+      </figure>
+    </div>
+
     <footer class="site-footer">
       <div class="container footer-content">
         <div class="footer-details">
