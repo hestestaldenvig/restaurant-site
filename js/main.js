@@ -46,6 +46,7 @@ const initializeMenuPdf = async () => {
   const errorMessage = 'Menuen kan ikke vises lige nu. Brug knappen herover eller kontakt os.';
   let pdfDocument = null;
   let resizeTimeout = null;
+  let renderCycle = 0;
 
   const showErrorState = () => {
     menuStatus.textContent = errorMessage;
@@ -59,6 +60,9 @@ const initializeMenuPdf = async () => {
       return;
     }
 
+    renderCycle += 1;
+    const activeRenderCycle = renderCycle;
+
     menuPages.innerHTML = '';
     menuStatus.textContent = loadingMessage;
     menuStatus.classList.remove('menu-status-error');
@@ -69,10 +73,25 @@ const initializeMenuPdf = async () => {
       return;
     }
 
+    const computedStyles = window.getComputedStyle(menuPages);
+    const gap = Number.parseFloat(computedStyles.columnGap || computedStyles.gap || '0') || 0;
+    const gridTemplateColumns = computedStyles.gridTemplateColumns.split(' ').filter(Boolean).length || 1;
+    const pageCellWidth = Math.max((containerWidth - gap * (gridTemplateColumns - 1)) / gridTemplateColumns, 1);
+
     for (let pageNumber = 1; pageNumber <= pdfDocument.numPages; pageNumber += 1) {
       const pageHandle = await pdfDocument.getPage(pageNumber);
       const baseViewport = pageHandle.getViewport({ scale: 1 });
-      const scale = containerWidth / baseViewport.width;
+
+      const pageWrapper = document.createElement('div');
+      pageWrapper.className = 'menu-page';
+      menuPages.appendChild(pageWrapper);
+
+      const wrapperStyles = window.getComputedStyle(pageWrapper);
+      const wrapperHorizontalPadding =
+        (Number.parseFloat(wrapperStyles.paddingLeft || '0') || 0) +
+        (Number.parseFloat(wrapperStyles.paddingRight || '0') || 0);
+      const renderWidth = Math.max(pageCellWidth - wrapperHorizontalPadding, 1);
+      const scale = renderWidth / baseViewport.width;
       const viewport = pageHandle.getViewport({ scale });
 
       const canvas = document.createElement('canvas');
@@ -83,7 +102,12 @@ const initializeMenuPdf = async () => {
 
       const context = canvas.getContext('2d', { alpha: false });
       await pageHandle.render({ canvasContext: context, viewport }).promise;
-      menuPages.appendChild(canvas);
+
+      if (activeRenderCycle !== renderCycle) {
+        return;
+      }
+
+      pageWrapper.appendChild(canvas);
     }
 
     menuStatus.hidden = true;

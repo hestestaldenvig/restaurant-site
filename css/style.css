@@ -297,8 +297,18 @@ p + h3 {
 .menu-pages {
   width: 100%;
   display: grid;
-  gap: 1.1rem;
-  justify-items: center;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+}
+
+.menu-page {
+  width: 100%;
+  background: #fff;
+  border-radius: 0.8rem;
+  border: 1px solid #e8dfd0;
+  box-shadow: 0 8px 20px rgba(43, 28, 16, 0.1);
+  padding: 0.7rem;
+  overflow: hidden;
 }
 
 .menu-page-canvas {
@@ -307,9 +317,7 @@ p + h3 {
   max-width: 100%;
   height: auto;
   background: #fff;
-  border-radius: 0.75rem;
-  box-shadow: 0 8px 20px rgba(43, 28, 16, 0.14);
-  border: 1px solid #e8dfd0;
+  border-radius: 0.5rem;
 }
 
 
@@ -457,6 +465,16 @@ p + h3 {
   }
 
   .gallery-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .menu-pages {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 72rem) {
+  .menu-pages {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
