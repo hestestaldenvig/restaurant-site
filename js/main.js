@@ -200,18 +200,19 @@ const initializeArrangementSelector = async () => {
   }
 
   const arrangementSelect = document.querySelector('#arrangement-type');
-  const arrangementCards = document.querySelectorAll('.arrangement-card');
+  const arrangementSections = document.querySelectorAll('.arrangement-section');
   const defaultMessage = document.querySelector('#arrangement-default-message');
 
-  if (!arrangementSelect || !arrangementCards.length || !defaultMessage) {
+  if (!arrangementSelect || !arrangementSections.length || !defaultMessage) {
     return;
   }
 
   const arrangementRenderers = new Map();
 
   const hideAllSections = () => {
-    arrangementCards.forEach((card) => {
-      card.hidden = true;
+    arrangementSections.forEach((section) => {
+      section.classList.add('hidden');
+      section.setAttribute('hidden', 'hidden');
     });
   };
 
@@ -248,13 +249,16 @@ const initializeArrangementSelector = async () => {
     hideAllSections();
 
     if (!selectedArrangement) {
+      defaultMessage.classList.remove('hidden');
       defaultMessage.hidden = false;
       return;
     }
 
-    const activeSection = document.querySelector(`#${selectedArrangement}`);
+    const activeSection = document.querySelector(`#${selectedArrangement}.arrangement-section`);
     if (activeSection) {
-      activeSection.hidden = false;
+      activeSection.classList.remove('hidden');
+      activeSection.removeAttribute('hidden');
+      defaultMessage.classList.add('hidden');
       defaultMessage.hidden = true;
       await showSectionMenu(activeSection);
     }
@@ -265,6 +269,7 @@ const initializeArrangementSelector = async () => {
   });
 
   hideAllSections();
+  defaultMessage.classList.remove('hidden');
   defaultMessage.hidden = false;
 };
 

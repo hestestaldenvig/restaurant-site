@@ -291,6 +291,10 @@ p + h3 {
   gap: 1.4rem;
 }
 
+.hidden {
+  display: none !important;
+}
+
 .arrangement-card {
   padding-top: 1.4rem;
   border-top: 1px solid #e7d8c2;
