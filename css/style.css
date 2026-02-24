@@ -132,6 +132,25 @@ a {
   color: var(--primary);
 }
 
+.nav-social-link {
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+}
+
+.nav-social-icon {
+  display: block;
+  width: auto;
+  max-height: 1.4rem;
+  opacity: 0.8;
+  transition: opacity 0.18s ease;
+}
+
+.nav-social-link:hover .nav-social-icon,
+.nav-social-link:focus-visible .nav-social-icon {
+  opacity: 1;
+}
+
 .section {
   padding: clamp(2.5rem, 4.2vw, 3rem) 0;
 }
@@ -903,6 +922,10 @@ p + h3 {
     padding: 0;
     background: transparent;
     max-width: 65%;
+  }
+
+  .nav-social-link {
+    margin-left: 0.2rem;
   }
 
   .three-col {
