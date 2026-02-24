@@ -461,11 +461,22 @@ p + h3 {
 .site-footer {
   border-top: 1px solid var(--line);
   background: #e7d8c2;
-  padding: 1.5rem 0 2rem;
+  padding: 1rem 0 1.15rem;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.9rem;
 }
 
 .footer-content p {
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.35rem;
+}
+
+.footer-details p:last-child {
+  margin-bottom: 0;
 }
 
 .footer-smiley {
@@ -488,6 +499,7 @@ p + h3 {
 .footer-smiley-logo {
   display: block;
   height: auto;
+  max-height: 56px;
   width: clamp(72px, 10vw, 100px);
 }
 
@@ -601,6 +613,16 @@ p + h3 {
   .menu-actions .btn {
     width: 100%;
     text-align: center;
+  }
+
+  .footer-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.35rem;
+  }
+
+  .footer-smiley {
+    margin-top: 0.1rem;
   }
 }
 
