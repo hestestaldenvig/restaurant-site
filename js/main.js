@@ -73,11 +73,6 @@ const initializeMenuPdf = async () => {
       return;
     }
 
-    const computedStyles = window.getComputedStyle(menuPages);
-    const gap = Number.parseFloat(computedStyles.columnGap || computedStyles.gap || '0') || 0;
-    const gridTemplateColumns = computedStyles.gridTemplateColumns.split(' ').filter(Boolean).length || 1;
-    const pageCellWidth = Math.max((containerWidth - gap * (gridTemplateColumns - 1)) / gridTemplateColumns, 1);
-
     for (let pageNumber = 1; pageNumber <= pdfDocument.numPages; pageNumber += 1) {
       const pageHandle = await pdfDocument.getPage(pageNumber);
       const baseViewport = pageHandle.getViewport({ scale: 1 });
@@ -90,7 +85,8 @@ const initializeMenuPdf = async () => {
       const wrapperHorizontalPadding =
         (Number.parseFloat(wrapperStyles.paddingLeft || '0') || 0) +
         (Number.parseFloat(wrapperStyles.paddingRight || '0') || 0);
-      const renderWidth = Math.max(pageCellWidth - wrapperHorizontalPadding, 1);
+      const wrapperWidth = pageWrapper.getBoundingClientRect().width || containerWidth;
+      const renderWidth = Math.max(wrapperWidth - wrapperHorizontalPadding, 1);
       const scale = renderWidth / baseViewport.width;
       const viewport = pageHandle.getViewport({ scale });
 

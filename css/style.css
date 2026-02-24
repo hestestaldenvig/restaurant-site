@@ -43,6 +43,11 @@ a {
   margin-inline: auto;
 }
 
+.menu-section {
+  width: min(100%, 72rem);
+  margin-inline: auto;
+}
+
 .site-header {
   padding-top: 1rem;
   background: transparent;
@@ -299,6 +304,7 @@ p + h3 {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 1rem;
+  justify-content: center;
 }
 
 .menu-page {
@@ -306,7 +312,7 @@ p + h3 {
   background: #fff;
   border-radius: 0.8rem;
   border: 1px solid #e8dfd0;
-  box-shadow: 0 8px 20px rgba(43, 28, 16, 0.1);
+  box-shadow: 0 10px 24px rgba(43, 28, 16, 0.11);
   padding: 0.7rem;
   overflow: hidden;
 }
@@ -468,13 +474,10 @@ p + h3 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
-  .menu-pages {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
 }
 
-@media (min-width: 72rem) {
+@media (min-width: 64rem) {
   .menu-pages {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
