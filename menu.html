@@ -32,15 +32,15 @@
           <h1>Menukort</h1>
           <p>Se vores aktuelle menukort herunder. PDF-filen opdateres løbende, så du altid kan finde den nyeste version.</p>
 
-          <a class="btn btn-primary" href="uploads/menu.pdf" download>Download menu (PDF)</a>
-
-          <article class="menu-pdf-card">
-            <object class="menu-pdf-viewer" data="uploads/menu.pdf" type="application/pdf" aria-label="Indlejret menukort som PDF">
-              <div class="menu-pdf-fallback">
-                <p>Kunne ikke indlæse menuen direkte her.</p>
-                <a class="btn btn-secondary" href="uploads/menu.pdf" target="_blank" rel="noopener">Åbn menu i nyt vindue</a>
-              </div>
-            </object>
+          <article class="menu-pdf-card" aria-label="Menukort">
+            <div class="menu-preview-placeholder" role="img" aria-label="Forhåndsvisning af menu">
+              <span>Forhåndsvisning af menu</span>
+            </div>
+            <div class="menu-actions">
+              <a class="btn btn-primary" href="uploads/menu.pdf" target="_blank" rel="noopener">Åbn menu (PDF)</a>
+              <a class="btn btn-secondary" href="uploads/menu.pdf" download>Download menu</a>
+            </div>
+            <p class="menu-helper-text">Menuen åbner som PDF og kan nemt udskiftes.</p>
           </article>
         </div>
       </section>

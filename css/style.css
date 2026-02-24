@@ -247,38 +247,40 @@ p + h3 {
 }
 
 
-.menu-section > .btn {
-  margin-bottom: 1.2rem;
-}
-
 .menu-pdf-card {
   background: linear-gradient(180deg, #fbf6ec 0%, #f5e8d4 100%);
   border: 1px solid var(--line);
   border-radius: 1rem;
-  padding: 0.9rem;
+  padding: 1.1rem;
   box-shadow: 0 12px 28px rgba(70, 48, 31, 0.12);
-}
-
-.menu-pdf-viewer {
-  display: block;
-  width: 100%;
-  height: clamp(34rem, 75vh, 62rem);
-  border: 0;
-  border-radius: 0.7rem;
-  background: #fff;
-}
-
-.menu-pdf-fallback {
-  min-height: 18rem;
   display: grid;
-  place-content: center;
-  gap: 0.7rem;
-  text-align: center;
-  padding: 1.5rem;
+  gap: 1rem;
 }
 
-.menu-pdf-fallback p {
+.menu-preview-placeholder {
+  min-height: clamp(14rem, 36vw, 20rem);
+  border-radius: 0.8rem;
+  border: 1px solid #e3d1b8;
+  background: linear-gradient(145deg, #fdf8ef 0%, #f2e3cb 100%);
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: 1.25rem;
+  color: var(--muted);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.menu-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.menu-helper-text {
   margin: 0;
+  color: var(--muted);
+  font-size: 0.95rem;
 }
 
 .footer-note {
@@ -388,11 +390,12 @@ p + h3 {
   }
 
   .menu-pdf-card {
-    padding: 0.65rem;
+    padding: 0.85rem;
   }
 
-  .menu-pdf-viewer {
-    height: clamp(28rem, 70vh, 52rem);
+  .menu-actions .btn {
+    width: 100%;
+    text-align: center;
   }
 }
 
