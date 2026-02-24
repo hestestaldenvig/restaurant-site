@@ -286,27 +286,50 @@ p + h3 {
 }
 
 .arrangement-content {
-  margin-top: 0.5rem;
+  margin-top: 1rem;
+  display: grid;
+  gap: 1.4rem;
 }
 
 .arrangement-card {
-  background: linear-gradient(180deg, #fbf6ec 0%, #f5e8d4 100%);
-  border-radius: 1rem;
-  box-shadow: 0 10px 24px rgba(70, 48, 31, 0.12);
+  padding-top: 1.4rem;
+  border-top: 1px solid #e7d8c2;
+  display: grid;
+  gap: 0.85rem;
+}
+
+.arrangement-card:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.arrangement-card h2 {
+  margin: 0;
+  font-size: clamp(1.6rem, 2.3vw, 2rem);
+}
+
+.arrangement-card p {
+  margin: 0;
 }
 
 .arrangement-menu-card {
-  margin-top: 1rem;
+  display: grid;
+  gap: 0.9rem;
 }
 
 .arrangement-menu-card .menu-pages {
   margin-top: 0.25rem;
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .arrangement-menu {
   margin: 0;
   color: var(--primary-dark);
   font-weight: 700;
+}
+
+.arrangement-menu-card .menu-status {
+  margin-top: -0.1rem;
 }
 
 .menu-pdf-card {
@@ -369,7 +392,7 @@ p + h3 {
   background: #fff;
   border-radius: 0.8rem;
   border: 1px solid #e8dfd0;
-  box-shadow: 0 10px 24px rgba(43, 28, 16, 0.11);
+  box-shadow: 0 4px 12px rgba(43, 28, 16, 0.1);
   padding: 0.7rem;
   overflow: hidden;
 }
