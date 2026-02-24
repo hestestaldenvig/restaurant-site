@@ -42,9 +42,29 @@
           <p>Se vores aktuelle menukort herunder. PDF-filen opdateres løbende, så du altid kan finde den nyeste version.</p>
 
           <article class="menu-pdf-card" aria-label="Menukort">
+            <div class="menu-switch" role="tablist" aria-label="Vælg menukort">
+              <button
+                class="menu-switch-tab is-active"
+                type="button"
+                role="tab"
+                aria-selected="true"
+                data-menu-key="aften"
+              >
+                Aftenmenu
+              </button>
+              <button
+                class="menu-switch-tab"
+                type="button"
+                role="tab"
+                aria-selected="false"
+                data-menu-key="frokost"
+              >
+                Frokostmenu
+              </button>
+            </div>
             <div class="menu-actions">
-              <a class="btn btn-primary" href="uploads/menu.pdf" target="_blank" rel="noopener">Åbn menu (PDF)</a>
-              <a class="btn btn-secondary" href="uploads/menu.pdf" download>Download menu</a>
+              <a id="menu-open-link" class="btn btn-primary" href="uploads/menu.pdf" target="_blank" rel="noopener">Åbn menu (PDF)</a>
+              <a id="menu-download-link" class="btn btn-secondary" href="uploads/menu.pdf" download>Download menu</a>
             </div>
             <p id="menu-status" class="menu-status" role="status">Indlæser menu...</p>
             <div id="menu-pages" class="menu-pages" aria-live="polite"></div>

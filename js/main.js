@@ -57,15 +57,17 @@ const renderPdfToGrid = async (pdfUrl, containerElement, statusElement, options 
     return null;
   }
 
-  if (pdfGridRenderers.has(containerElement)) {
-    return pdfGridRenderers.get(containerElement);
+  const encodedPdfUrl = encodeURI(pdfUrl);
+  const rendererKey = `${containerElement.id || containerElement.className || 'pdf-container'}::${encodedPdfUrl}`;
+
+  if (pdfGridRenderers.has(rendererKey)) {
+    return pdfGridRenderers.get(rendererKey);
   }
 
   const loadingMessage = options.loadingMessage || 'Indlæser menu...';
   const idleMessage = options.idleMessage || 'Vælg arrangementet for at indlæse menuen.';
   const errorMessage = options.errorMessage || 'Menuen kan ikke vises lige nu. Brug knapperne herover eller kontakt os.';
   const ariaLabelPrefix = options.ariaLabelPrefix || 'Menu side';
-  const encodedPdfUrl = encodeURI(pdfUrl);
 
   let pdfDocument = null;
   let renderCycle = 0;
@@ -163,7 +165,7 @@ const renderPdfToGrid = async (pdfUrl, containerElement, statusElement, options 
     },
   };
 
-  pdfGridRenderers.set(containerElement, renderer);
+  pdfGridRenderers.set(rendererKey, renderer);
   bindPdfResizeHandler();
 
   return renderer;
@@ -176,20 +178,88 @@ const initializeMenuPdf = async () => {
 
   const menuPages = document.querySelector('#menu-pages');
   const menuStatus = document.querySelector('#menu-status');
+  const menuOpenLink = document.querySelector('#menu-open-link');
+  const menuDownloadLink = document.querySelector('#menu-download-link');
+  const menuTabs = document.querySelectorAll('.menu-switch-tab');
 
-  if (!menuPages || !menuStatus || !window.pdfjsLib) {
+  if (!menuPages || !menuStatus || !menuOpenLink || !menuDownloadLink || !menuTabs.length || !window.pdfjsLib) {
     return;
   }
 
-  const renderer = await renderPdfToGrid('./uploads/menu.pdf', menuPages, menuStatus, {
-    loadingMessage: 'Indlæser menu...',
-    errorMessage: 'Menuen kan ikke vises lige nu. Brug knappen herover eller kontakt os.',
-    ariaLabelPrefix: 'Menu side',
+  const menuConfigs = {
+    aften: {
+      url: './uploads/menu.pdf',
+      label: 'Aftenmenu',
+    },
+    frokost: {
+      url: './uploads/Menu-frokost.pdf',
+      label: 'Frokostmenu',
+    },
+  };
+
+  const menuRenderers = new Map();
+
+  const updateActionLinks = (menuKey) => {
+    const activeConfig = menuConfigs[menuKey];
+    if (!activeConfig) {
+      return;
+    }
+
+    menuOpenLink.href = activeConfig.url;
+    menuDownloadLink.href = activeConfig.url;
+    menuDownloadLink.setAttribute('download', `${activeConfig.label}.pdf`);
+  };
+
+  const updateTabState = (menuKey) => {
+    menuTabs.forEach((tab) => {
+      const isActive = tab.dataset.menuKey === menuKey;
+      tab.classList.toggle('is-active', isActive);
+      tab.setAttribute('aria-selected', String(isActive));
+    });
+  };
+
+  const showMenu = async (menuKey) => {
+    const activeConfig = menuConfigs[menuKey];
+    if (!activeConfig) {
+      return;
+    }
+
+    updateTabState(menuKey);
+    updateActionLinks(menuKey);
+
+    menuPages.innerHTML = '';
+    menuStatus.textContent = `Indlæser ${activeConfig.label.toLowerCase()}...`;
+    menuStatus.classList.remove('menu-status-error');
+    menuStatus.hidden = false;
+
+    if (!menuRenderers.has(menuKey)) {
+      const renderer = await renderPdfToGrid(activeConfig.url, menuPages, menuStatus, {
+        loadingMessage: `Indlæser ${activeConfig.label.toLowerCase()}...`,
+        errorMessage: `${activeConfig.label} kan ikke vises lige nu. Brug knapperne herover eller kontakt os.`,
+        ariaLabelPrefix: `${activeConfig.label} side`,
+      });
+      menuRenderers.set(menuKey, renderer);
+    }
+
+    const renderer = menuRenderers.get(menuKey);
+    if (renderer) {
+      await renderer.ensureRendered();
+    }
+  };
+
+  menuTabs.forEach((tab) => {
+    tab.addEventListener('click', async () => {
+      const selectedKey = tab.dataset.menuKey;
+      if (!selectedKey || !menuConfigs[selectedKey]) {
+        return;
+      }
+
+      await showMenu(selectedKey);
+    });
   });
 
-  if (renderer) {
-    await renderer.ensureRendered();
-  }
+  updateActionLinks('aften');
+  await showMenu('aften');
 };
 
 initializeMenuPdf();
