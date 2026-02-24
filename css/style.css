@@ -38,10 +38,8 @@ main {
   flex: 1;
   width: min(100% - 2.2rem, 74rem);
   margin: 1.9rem auto 2.5rem;
-  background: #fdf8f0;
-  border: 1px solid #dfc8ad;
-  border-radius: 1rem;
-  box-shadow: 0 14px 35px rgba(70, 48, 31, 0.12);
+  background: transparent;
+  padding-bottom: 1.25rem;
 }
 
 a {
@@ -135,7 +133,7 @@ a {
 }
 
 .section {
-  padding: 3rem 0;
+  padding: 3.25rem 0;
 }
 
 .hero {
@@ -247,6 +245,7 @@ p + h3 {
   border: 1px solid var(--line);
   border-radius: 0.8rem;
   padding: 1rem;
+  box-shadow: 0 8px 18px rgba(70, 48, 31, 0.08);
 }
 
 .placeholder,
@@ -508,7 +507,7 @@ p + h3 {
   }
 
   .section {
-    padding: 2.4rem 0;
+    padding: 2.6rem 0;
   }
 
   h1 {
@@ -523,6 +522,7 @@ p + h3 {
   main {
     width: min(100% - 1.2rem, 74rem);
     margin-top: 1.45rem;
+    padding-bottom: 1rem;
   }
 
   .topbar {
