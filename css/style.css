@@ -228,6 +228,54 @@ p + h3 {
   margin-bottom: 0.5rem;
 }
 
+
+.info-card {
+  border-radius: 1rem;
+  padding: 1.4rem;
+  box-shadow: 0 8px 20px rgba(70, 48, 31, 0.08);
+}
+
+.info-card h2 {
+  margin-bottom: 1rem;
+}
+
+.hours-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.hours-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.45rem 0;
+  border-bottom: 1px solid #eee4d7;
+}
+
+.hours-list li:last-child {
+  border-bottom: 0;
+}
+
+.hours-list li span:last-child {
+  font-weight: 700;
+}
+
+.map-embed {
+  border-radius: 0.8rem;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  margin-bottom: 1rem;
+}
+
+.map-embed iframe {
+  display: block;
+  width: 100%;
+  min-height: 240px;
+  border: 0;
+}
+
 @media (max-width: 36rem) {
   body {
     font-size: 1rem;
