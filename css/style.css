@@ -336,6 +336,23 @@ p + h3 {
   margin-top: -0.1rem;
 }
 
+.arrangement-pdf-link {
+  width: fit-content;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #b56f1d;
+  text-decoration: underline;
+  text-decoration-color: rgba(181, 111, 29, 0.4);
+  text-underline-offset: 0.16em;
+  transition: color 140ms ease, text-decoration-color 140ms ease;
+}
+
+.arrangement-pdf-link:hover,
+.arrangement-pdf-link:focus-visible {
+  color: #8d5414;
+  text-decoration-color: currentColor;
+}
+
 .menu-pdf-card {
   background: linear-gradient(180deg, #fbf6ec 0%, #f5e8d4 100%);
   border: 1px solid var(--line);
