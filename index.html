@@ -3,134 +3,74 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Olive & Ember | Sæsonbaseret nabolagskøkken</title>
+    <title>Hestestalden | Forside</title>
     <meta
       name="description"
-      content="Olive & Ember er en nabolagsrestaurant, der serverer sæsonens retter, frisk bagværk og håndlavede drikkevarer."
+      content="Velkommen til Hestestalden i Vig. Oplev hyggelig stemning, klassiske retter og lokale råvarer."
     />
     <link rel="stylesheet" href="css/style.css" />
   </head>
-  <body>
-    <!-- Site header with compact mobile navigation. -->
+  <body data-page="forside">
     <header class="site-header">
       <div class="container nav-shell">
-        <a class="brand" href="#home" aria-label="Olive and Ember forside">Olive &amp; Ember</a>
-
-        <!-- Mobile menu button (visible on small screens). -->
-        <button
-          class="menu-toggle"
-          type="button"
-          aria-expanded="false"
-          aria-controls="primary-navigation"
-        >
-          Menu
-        </button>
-
-        <!-- Primary navigation links. -->
+        <a class="brand" href="index.html">Hestestalden</a>
+        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation">Menu</button>
         <nav id="primary-navigation" class="primary-nav" aria-label="Primær navigation">
-          <a href="#menu">Menu</a>
-          <a href="#about">Om os</a>
-          <a href="#hours">Åbningstider</a>
-          <a href="#contact">Kontakt</a>
+          <a href="index.html" data-page="forside">Forside</a>
+          <a href="menu.html" data-page="menu">Menu</a>
+          <a href="nyheder.html" data-page="nyheder">Nyheder</a>
+          <a href="galleri.html" data-page="galleri">Galleri</a>
+          <a href="arrangementer.html" data-page="arrangementer">Arrangementer</a>
+          <a href="kontakt.html" data-page="kontakt">Kontakt</a>
         </nav>
       </div>
     </header>
 
-    <main id="home">
-      <!-- Hero section introduces the restaurant value proposition. -->
-      <section class="hero">
-        <div class="container hero-content">
-          <p class="eyebrow">Bymidten • Fra jord til bord • Siden 2012</p>
-          <h1>Moderne comfort food, lavet frisk hver dag.</h1>
-          <p>
-            Oplev sæsonbaserede retter skabt af vores kokke, hjemmebagt brød og særlige mocktails i et
-            varmt og indbydende spisemiljø.
-          </p>
-          <div class="hero-actions">
-            <a class="btn btn-primary" href="#menu">Se menuen</a>
-            <a class="btn btn-secondary" href="#contact">Book et bord</a>
-          </div>
-        </div>
-      </section>
-
-      <!-- Featured highlights provide a quick snapshot of offerings. -->
-      <section class="highlights" aria-label="Restaurantens højdepunkter">
-        <div class="container grid-cards">
-          <article class="card">
-            <h2>Morgenmad & brunch</h2>
-            <p>Frisk bagværk, surdejstoast og skiftende sæsonomeletter hver dag indtil kl. 14.</p>
-          </article>
-          <article class="card">
-            <h2>Kokkens tastingmenu</h2>
-            <p>Aftenens 5-retters menu med lokale råvarer og smage inspireret af kysten.</p>
-          </article>
-          <article class="card">
-            <h2>Håndlavede drikke</h2>
-            <p>Signatur-espresso, botaniske mocktails og nøje udvalgte vine fra små producenter.</p>
-          </article>
-        </div>
-      </section>
-
-      <!-- Menu preview showcases key dishes in a simple mobile-first grid. -->
-      <section id="menu" class="menu-preview">
+    <main>
+      <section class="hero section">
         <div class="container">
-          <div class="section-heading">
-            <p class="eyebrow">Sæsonens favoritter</p>
-            <h2>Udvalgt menu</h2>
-          </div>
-          <div class="menu-grid">
-            <article class="menu-item">
-              <h3>Grillet laks med citrus</h3>
-              <p>Ristet fennikel, quinoa-pilaf, yoghurt med syltet citron.</p>
-              <span>169 kr.</span>
-            </article>
-            <article class="menu-item">
-              <h3>Risotto med vilde svampe</h3>
-              <p>Sprød parmesan, persilleolie, ristede valnødder.</p>
-              <span>149 kr.</span>
-            </article>
-            <article class="menu-item">
-              <h3>Kylling med honning og timian</h3>
-              <p>Flødekartoffelmos, grillet broccolini, sky.</p>
-              <span>159 kr.</span>
-            </article>
-            <article class="menu-item">
-              <h3>Tærte med stenfrugt</h3>
-              <p>Mandelcreme, karamelliseret fersken, vaniljeis.</p>
-              <span>79 kr.</span>
-            </article>
+          <p class="eyebrow">Restaurant i Vig</p>
+          <h1>Velkommen til Hestestalden</h1>
+          <p>
+            Hos Hestestalden serverer vi velsmagende retter i rolige omgivelser med fokus på god service
+            og hyggelige aftener.
+          </p>
+          <div class="actions">
+            <a class="btn btn-primary" href="menu.html">Se menu</a>
+            <a class="btn btn-secondary" href="kontakt.html">Kontakt</a>
           </div>
         </div>
       </section>
 
-      <!-- About and practical details section. -->
-      <section id="about" class="about">
-        <div class="container about-grid">
-          <div>
-            <p class="eyebrow">Vores historie</p>
-            <h2>Nabolagets gæstfrihed med sæsonen i centrum.</h2>
-            <p>
-              Olive & Ember samarbejder med nærliggende gårde og fiskerier for at servere råvarefokuserede
-              måltider, der hylder hver sæson. Vores køkken forener klassiske teknikker med uhøjtidelig komfort.
-            </p>
-          </div>
-          <div id="hours" class="info-card">
-            <h3>Åbningstider</h3>
-            <ul>
-              <li><strong>Man-tors:</strong> 8.00 - 22.00</li>
-              <li><strong>Fre-lør:</strong> 8.00 - 23.00</li>
-              <li><strong>Søndag:</strong> 9.00 - 21.00</li>
-            </ul>
-          </div>
+      <section class="section">
+        <div class="container cards three-col">
+          <article class="card">
+            <h2>Klassisk køkken</h2>
+            <p>Vi tilbyder en varieret menu med velkendte favoritter og sæsoninspirerede specialiteter.</p>
+          </article>
+          <article class="card">
+            <h2>Afslappet atmosfære</h2>
+            <p>En stemningsfuld restaurant med plads til både hverdagsmiddag og særlige anledninger.</p>
+          </article>
+          <article class="card">
+            <h2>Lokale råvarer</h2>
+            <p>Vi vælger friske råvarer og samarbejder med udvalgte leverandører i nærområdet.</p>
+          </article>
         </div>
       </section>
     </main>
 
-    <!-- Footer includes concise contact information. -->
-    <footer id="contact" class="site-footer">
-      <div class="container footer-grid">
-        <p><strong>Olive &amp; Ember</strong> · River Street 125, Portland, OR</p>
-        <p>(503) 555-0147 · hej@oliveandember.com</p>
+    <footer class="site-footer">
+      <div class="container footer-content">
+        <p><strong>Hestestalden</strong> · Ravnsbjergvej 29, 4560 Vig</p>
+        <p>
+          <a href="tel:+4551274438">+45 51 27 44 38</a> ·
+          <a href="mailto:hestestaldenvig@gmail.com">hestestaldenvig@gmail.com</a>
+        </p>
+        <p>
+          <strong>Lukket:</strong> Mandag, Tirsdag, Onsdag og Søndag<br />
+          <strong>Åben:</strong> Torsdag, Fredag og Lørdag fra 17:30 til 21:00
+        </p>
       </div>
     </footer>
 
