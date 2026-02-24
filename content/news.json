@@ -1,0 +1,30 @@
+[
+  {
+    "id": "valentinsdag-hestestalden-2026",
+    "title": "Valentinsdag i Hestestalden",
+    "date": "2026-02-14",
+    "excerpt": "Fejr kærligheden med en hyggelig aften og en særlig Valentine-menu hos os.",
+    "body": "Vi glæder os til at byde jer velkommen til en romantisk valentinsaften i varme rammer.\n\nMenuen er sammensat med sæsonens råvarer og ekstra forkælelse, så I kan nyde aftenen i ro og mag.\n\nRing gerne i god tid for bordbestilling.",
+    "images": [],
+    "pdf": {
+      "url": "./uploads/vlt-menu-pdf",
+      "title": "Valentines menu"
+    }
+  },
+  {
+    "id": "forarsmenu-2026",
+    "title": "Forårsmenuen er landet",
+    "date": "2026-04-12",
+    "excerpt": "Vi har opdateret menuen med nye retter inspireret af sæsonens råvarer og lyse smage.",
+    "body": "Vores køkken har sammensat en ny forårsmenu med fokus på friske råvarer og klassiske smage med et moderne twist.",
+    "images": []
+  },
+  {
+    "id": "bordreservation-fredag-2026",
+    "title": "Udvidede bordreservationer fredag",
+    "date": "2026-03-28",
+    "excerpt": "På grund af stor efterspørgsel tilbyder vi flere bordreservationer om fredagen i april.",
+    "body": "Vi har åbnet flere tidspunkter for reservation om fredagen i april, så endnu flere gæster kan få en god aften hos os.",
+    "images": []
+  }
+]
