@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap");
+
 :root {
   --bg: #e8dfd2;
   --surface: #ffffff;
@@ -14,10 +16,12 @@
 
 body {
   margin: 0;
-  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 1.02rem;
   color: var(--text);
   background: radial-gradient(circle at top, #f0e7da 0%, var(--bg) 55%, #ddd2c3 100%);
-  line-height: 1.6;
+  line-height: 1.75;
+  letter-spacing: 0.01em;
 }
 
 main {
@@ -105,12 +109,48 @@ a {
 h1,
 h2,
 h3 {
+  font-family: "Playfair Display", Georgia, "Times New Roman", serif;
   line-height: 1.2;
-  margin: 0 0 0.75rem;
+  color: #201a15;
+  letter-spacing: 0.01em;
+  margin: 0 0 1rem;
+}
+
+h1 {
+  font-size: clamp(2rem, 6vw, 3.2rem);
+  font-weight: 600;
+  margin-bottom: 1.35rem;
+}
+
+h2 {
+  font-size: clamp(1.6rem, 4.6vw, 2.3rem);
+  font-weight: 600;
+  margin-top: 0.35rem;
+  margin-bottom: 1rem;
+}
+
+h3 {
+  font-size: clamp(1.3rem, 3.8vw, 1.6rem);
+  font-weight: 500;
+  margin-bottom: 0.85rem;
 }
 
 p {
-  margin: 0 0 1rem;
+  font-size: clamp(1rem, 1.6vw, 1.08rem);
+  line-height: 1.8;
+  margin: 0 0 1.25rem;
+  color: #2d2721;
+}
+
+h1 + p,
+h2 + p,
+h3 + p {
+  margin-top: 0.35rem;
+}
+
+p + h2,
+p + h3 {
+  margin-top: 1.85rem;
 }
 
 .eyebrow,
@@ -186,6 +226,26 @@ p {
 
 .footer-content p {
   margin-bottom: 0.5rem;
+}
+
+@media (max-width: 36rem) {
+  body {
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+
+  .section {
+    padding: 2.4rem 0;
+  }
+
+  h1 {
+    margin-bottom: 1.15rem;
+  }
+
+  p {
+    line-height: 1.75;
+    margin-bottom: 1.1rem;
+  }
 }
 
 @media (min-width: 48rem) {
