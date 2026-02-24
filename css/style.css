@@ -295,6 +295,14 @@ p + h3 {
   box-shadow: 0 10px 24px rgba(70, 48, 31, 0.12);
 }
 
+.arrangement-menu-card {
+  margin-top: 1rem;
+}
+
+.arrangement-menu-card .menu-pages {
+  margin-top: 0.25rem;
+}
+
 .arrangement-menu {
   margin: 0;
   color: var(--primary-dark);
