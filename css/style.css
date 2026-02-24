@@ -647,6 +647,40 @@ p + h3 {
   border: 0;
 }
 
+
+.homepage-gallery-preview h2 {
+  margin-bottom: 1rem;
+}
+
+.homepage-slideshow {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 14px 30px rgba(58, 40, 27, 0.16);
+  background: #e8d5bc;
+}
+
+.homepage-slideshow img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  opacity: 1;
+  transition: opacity 500ms ease;
+}
+
+.homepage-slideshow img.is-transitioning {
+  opacity: 0;
+}
+
+.homepage-slideshow-cta {
+  margin-top: 1.2rem;
+  display: flex;
+  justify-content: center;
+}
+
 @media (max-width: 36rem) {
   body {
     font-size: 1rem;

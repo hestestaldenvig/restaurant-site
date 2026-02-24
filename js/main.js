@@ -332,3 +332,127 @@ const initializeGalleryLightbox = () => {
 };
 
 initializeGalleryLightbox();
+
+
+const initializeHomepageSlideshow = () => {
+  if (document.body.dataset.page !== 'forside') {
+    return;
+  }
+
+  const slideshow = document.querySelector('[data-homepage-slideshow]');
+  const slideshowImage = slideshow ? slideshow.querySelector('img') : null;
+
+  if (!slideshow || !slideshowImage) {
+    return;
+  }
+
+  const slides = [
+    {
+      src: 'uploads/gallery/mad-1.jpg',
+      alt: 'Billede fra Hestestalden – mad (1 af 6)',
+    },
+    {
+      src: 'uploads/gallery/mad-2.jpg',
+      alt: 'Billede fra Hestestalden – mad (2 af 6)',
+    },
+    {
+      src: 'uploads/gallery/mad-3.jpg',
+      alt: 'Billede fra Hestestalden – mad (3 af 6)',
+    },
+    {
+      src: 'uploads/gallery/mad-4.jpg',
+      alt: 'Billede fra Hestestalden – mad (4 af 6)',
+    },
+    {
+      src: 'uploads/gallery/mad-5.jpg',
+      alt: 'Billede fra Hestestalden – mad (5 af 6)',
+    },
+    {
+      src: 'uploads/gallery/mad-6.jpg',
+      alt: 'Billede fra Hestestalden – mad (6 af 6)',
+    },
+  ];
+
+  const rotateInterval = 18000;
+  let activeIndex = 0;
+  let intervalHandle = null;
+  let isTransitioning = false;
+
+  const preloadImage = (src) =>
+    new Promise((resolve) => {
+      const image = new Image();
+      image.src = src;
+
+      if (image.complete) {
+        resolve();
+        return;
+      }
+
+      image.addEventListener('load', () => resolve(), { once: true });
+      image.addEventListener('error', () => resolve(), { once: true });
+    });
+
+  const setSlide = async (nextIndex) => {
+    if (isTransitioning) {
+      return;
+    }
+
+    const nextSlide = slides[nextIndex];
+    if (!nextSlide) {
+      return;
+    }
+
+    isTransitioning = true;
+    slideshowImage.classList.add('is-transitioning');
+
+    await new Promise((resolve) => {
+      window.setTimeout(resolve, 520);
+    });
+
+    await preloadImage(nextSlide.src);
+
+    slideshowImage.src = nextSlide.src;
+    slideshowImage.alt = nextSlide.alt;
+    activeIndex = nextIndex;
+
+    requestAnimationFrame(() => {
+      slideshowImage.classList.remove('is-transitioning');
+      isTransitioning = false;
+    });
+  };
+
+  const showNextSlide = () => {
+    const nextIndex = (activeIndex + 1) % slides.length;
+    setSlide(nextIndex);
+  };
+
+  const startRotation = () => {
+    if (intervalHandle || document.hidden) {
+      return;
+    }
+
+    intervalHandle = window.setInterval(showNextSlide, rotateInterval);
+  };
+
+  const stopRotation = () => {
+    if (!intervalHandle) {
+      return;
+    }
+
+    window.clearInterval(intervalHandle);
+    intervalHandle = null;
+  };
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      stopRotation();
+      return;
+    }
+
+    startRotation();
+  });
+
+  startRotation();
+};
+
+initializeHomepageSlideshow();
