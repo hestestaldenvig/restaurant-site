@@ -468,6 +468,29 @@ p + h3 {
   margin-bottom: 0.5rem;
 }
 
+.footer-smiley {
+  display: flex;
+  align-items: center;
+}
+
+.footer-smiley a {
+  display: inline-flex;
+  align-items: center;
+  opacity: 0.95;
+  transition: opacity 0.2s ease;
+}
+
+.footer-smiley a:hover,
+.footer-smiley a:focus-visible {
+  opacity: 1;
+}
+
+.footer-smiley-logo {
+  display: block;
+  height: auto;
+  width: clamp(72px, 10vw, 100px);
+}
+
 
 .info-card {
   border-radius: 1rem;
