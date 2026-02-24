@@ -251,6 +251,55 @@ p + h3 {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+.arrangement-selector {
+  margin: 1.25rem 0 1rem;
+  display: grid;
+  gap: 0.6rem;
+  max-width: 26rem;
+}
+
+.arrangement-selector label {
+  font-weight: 700;
+  color: var(--primary-dark);
+}
+
+.arrangement-selector select {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 0.7rem;
+  background: linear-gradient(180deg, #fbf3e6 0%, #f3e4cc 100%);
+  color: var(--text);
+  padding: 0.7rem 0.85rem;
+  font: inherit;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55);
+}
+
+.arrangement-selector select:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.arrangement-default-message {
+  margin: 0.5rem 0 1.2rem;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.arrangement-content {
+  margin-top: 0.5rem;
+}
+
+.arrangement-card {
+  background: linear-gradient(180deg, #fbf6ec 0%, #f5e8d4 100%);
+  border-radius: 1rem;
+  box-shadow: 0 10px 24px rgba(70, 48, 31, 0.12);
+}
+
+.arrangement-menu {
+  margin: 0;
+  color: var(--primary-dark);
+  font-weight: 700;
+}
 
 .menu-pdf-card {
   background: linear-gradient(180deg, #fbf6ec 0%, #f5e8d4 100%);

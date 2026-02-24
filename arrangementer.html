@@ -29,22 +29,65 @@
       <section class="section">
         <div class="container">
           <p class="eyebrow">Arrangementer</p>
-          <h1>Kommende arrangementer</h1>
-          <div class="cards two-col">
-            <article class="card">
-              <p class="meta">7. maj 2026</p>
-              <h2>Smageaften</h2>
-              <p>En aften med udvalgte retter og præsentation af sæsonens råvarer.</p>
+          <h1>Find det rette arrangement</h1>
+
+          <div class="arrangement-selector" aria-label="Vælg arrangementstype">
+            <label for="arrangement-type">Vælg arrangementstype</label>
+            <select id="arrangement-type" name="arrangement-type">
+              <option value="">-- Vælg en type --</option>
+              <option value="bisaettelse">Bisættelse</option>
+              <option value="generalforsamling">Generalforsamling</option>
+              <option value="foedselsdag">Fødselsdag</option>
+              <option value="konfirmation">Konfirmation</option>
+              <option value="barndaab">Barnedåb</option>
+              <option value="jubilaeum">Jubilæum</option>
+              <option value="firmaarrangement">Firmaarrangement</option>
+              <option value="mindesammenkomst">Mindesammenkomst</option>
+            </select>
+          </div>
+
+          <p id="arrangement-default-message" class="arrangement-default-message">Vælg et arrangement for at se mulighederne.</p>
+
+          <div class="cards two-col arrangement-content">
+            <article id="bisaettelse" class="card arrangement-card" hidden>
+              <h2>Bisættelse</h2>
+              <p>Vi skaber en rolig og værdig ramme, hvor I kan samles i trygge omgivelser.</p>
+              <p class="arrangement-menu">Menu tilpasses efter aftale.</p>
             </article>
-            <article class="card">
-              <p class="meta">21. maj 2026</p>
-              <h2>Familieaften</h2>
-              <p>Hyggelig middag med børnevenlige retter og ekstra fokus på fællesskab.</p>
+            <article id="generalforsamling" class="card arrangement-card" hidden>
+              <h2>Generalforsamling</h2>
+              <p>Vi tilbyder en praktisk opsætning med god plads til møde, dialog og forplejning.</p>
+              <p class="arrangement-menu">Menu tilpasses efter aftale.</p>
             </article>
-            <article class="card">
-              <p class="meta">4. juni 2026</p>
-              <h2>Sommerstart i gården</h2>
-              <p>Lette sommerretter og en afslappet aftenstemning i vores udendørsområde.</p>
+            <article id="foedselsdag" class="card arrangement-card" hidden>
+              <h2>Fødselsdag</h2>
+              <p>Fejr dagen med en hyggelig stemning og en løsning, der passer til jeres gæster.</p>
+              <p class="arrangement-menu">Menu tilpasses efter aftale.</p>
+            </article>
+            <article id="konfirmation" class="card arrangement-card" hidden>
+              <h2>Konfirmation</h2>
+              <p>Vi hjælper med at gøre konfirmationen personlig, festlig og let at planlægge.</p>
+              <p class="arrangement-menu">Menu tilpasses efter aftale.</p>
+            </article>
+            <article id="barndaab" class="card arrangement-card" hidden>
+              <h2>Barnedåb</h2>
+              <p>Skab en varm dag for familie og venner med fokus på nærvær og gode rammer.</p>
+              <p class="arrangement-menu">Menu tilpasses efter aftale.</p>
+            </article>
+            <article id="jubilaeum" class="card arrangement-card" hidden>
+              <h2>Jubilæum</h2>
+              <p>Vi sammensætter en stemningsfuld fejring, der matcher anledning og ønsker.</p>
+              <p class="arrangement-menu">Menu tilpasses efter aftale.</p>
+            </article>
+            <article id="firmaarrangement" class="card arrangement-card" hidden>
+              <h2>Firmaarrangement</h2>
+              <p>Giv kollegaerne en god oplevelse med fleksible rammer til både middag og netværk.</p>
+              <p class="arrangement-menu">Menu tilpasses efter aftale.</p>
+            </article>
+            <article id="mindesammenkomst" class="card arrangement-card" hidden>
+              <h2>Mindesammenkomst</h2>
+              <p>Vi står klar med en respektfuld og rolig atmosfære, hvor der er plads til samvær.</p>
+              <p class="arrangement-menu">Menu tilpasses efter aftale.</p>
             </article>
           </div>
         </div>

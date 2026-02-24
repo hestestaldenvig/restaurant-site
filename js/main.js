@@ -127,3 +127,47 @@ const initializeMenuPdf = async () => {
 };
 
 initializeMenuPdf();
+
+
+const initializeArrangementSelector = () => {
+  if (document.body.dataset.page !== 'arrangementer') {
+    return;
+  }
+
+  const arrangementSelect = document.querySelector('#arrangement-type');
+  const arrangementCards = document.querySelectorAll('.arrangement-card');
+  const defaultMessage = document.querySelector('#arrangement-default-message');
+
+  if (!arrangementSelect || !arrangementCards.length || !defaultMessage) {
+    return;
+  }
+
+  const hideAllSections = () => {
+    arrangementCards.forEach((card) => {
+      card.hidden = true;
+    });
+  };
+
+  const updateArrangementDisplay = () => {
+    const selectedArrangement = arrangementSelect.value;
+
+    hideAllSections();
+
+    if (!selectedArrangement) {
+      defaultMessage.hidden = false;
+      return;
+    }
+
+    const activeSection = document.querySelector(`#${selectedArrangement}`);
+    if (activeSection) {
+      activeSection.hidden = false;
+      defaultMessage.hidden = true;
+    }
+  };
+
+  arrangementSelect.addEventListener('change', updateArrangementDisplay);
+  hideAllSections();
+  defaultMessage.hidden = false;
+};
+
+initializeArrangementSelector();
