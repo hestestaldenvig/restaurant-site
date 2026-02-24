@@ -93,6 +93,10 @@
                 <input id="foresp-telefon" name="telefon" type="tel" autocomplete="tel" />
               </div>
               <div class="form-field form-field--full">
+                <label for="subject">Emne <span aria-hidden="true">*</span></label>
+                <input id="subject" name="subject" type="text" required />
+              </div>
+              <div class="form-field form-field--full">
                 <label for="foresp-besked">Besked <span aria-hidden="true">*</span></label>
                 <textarea id="foresp-besked" name="besked" rows="5" required></textarea>
               </div>
@@ -129,6 +133,7 @@
     <script>
       const kontaktForm = document.getElementById("kontakt-form");
       const forespFeedback = document.getElementById("foresp-feedback");
+      const forespFeedbackLink = forespFeedback ? forespFeedback.querySelector("a") : null;
 
       if (kontaktForm && forespFeedback) {
         kontaktForm.addEventListener("submit", (event) => {
@@ -137,6 +142,13 @@
           if (!kontaktForm.checkValidity()) {
             kontaktForm.reportValidity();
             return;
+          }
+
+          const formData = new FormData(kontaktForm);
+          const subjectValue = String(formData.get("subject") || "Forespørgsel").trim() || "Forespørgsel";
+
+          if (forespFeedbackLink) {
+            forespFeedbackLink.href = `mailto:hestestaldenvig@gmail.com?subject=${encodeURIComponent(subjectValue)}`;
           }
 
           forespFeedback.hidden = false;

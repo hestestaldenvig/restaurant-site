@@ -328,6 +328,7 @@ const initializeArrangementSelector = async () => {
   const arrangementSelect = document.querySelector('#arrangement-type');
   const arrangementSections = document.querySelectorAll('.arrangement-section');
   const defaultMessage = document.querySelector('#arrangement-default-message');
+  const arrangementContactCta = document.querySelector('#arrangement-contact-cta');
 
   if (!arrangementSelect || !arrangementSections.length || !defaultMessage) {
     return;
@@ -390,16 +391,49 @@ const initializeArrangementSelector = async () => {
     }
   };
 
+  const updateArrangementContactCta = () => {
+    if (!arrangementContactCta) {
+      return;
+    }
+
+    const activeOption = arrangementSelect.options[arrangementSelect.selectedIndex];
+    const arrangementType = activeOption && arrangementSelect.value ? activeOption.text.trim() : 'Speciel';
+    const subject = `${arrangementType} forespørgsel`;
+    arrangementContactCta.href = `kontakt.html?subject=${encodeURIComponent(subject)}`;
+  };
+
   arrangementSelect.addEventListener('change', () => {
     updateArrangementDisplay();
+    updateArrangementContactCta();
   });
 
   hideAllSections();
   defaultMessage.classList.remove('hidden');
   defaultMessage.hidden = false;
+  updateArrangementContactCta();
 };
 
 initializeArrangementSelector();
+
+const initializeContactSubjectPrefill = () => {
+  if (document.body.dataset.page !== 'kontakt') {
+    return;
+  }
+
+  const subjectInput = document.querySelector('#subject');
+  if (!subjectInput) {
+    return;
+  }
+
+  const params = new URLSearchParams(window.location.search);
+  const subjectFromQuery = params.get('subject');
+
+  if (subjectFromQuery) {
+    subjectInput.value = subjectFromQuery;
+  }
+};
+
+initializeContactSubjectPrefill();
 
 const formatNewsDate = (dateString) => {
   const parsedDate = new Date(dateString);
