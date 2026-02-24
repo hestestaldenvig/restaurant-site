@@ -28,31 +28,53 @@ navLinks.forEach((link) => {
   });
 });
 
-const initializeMenuPdf = async () => {
-  if (document.body.dataset.page !== 'menu') {
+const pdfWorkerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+const pdfGridRenderers = new Map();
+let hasBoundResizeListener = false;
+let resizeDebounceHandle = null;
+
+const bindPdfResizeHandler = () => {
+  if (hasBoundResizeListener) {
     return;
   }
 
-  const menuPages = document.querySelector('#menu-pages');
-  const menuStatus = document.querySelector('#menu-status');
+  window.addEventListener('resize', () => {
+    window.clearTimeout(resizeDebounceHandle);
+    resizeDebounceHandle = window.setTimeout(() => {
+      pdfGridRenderers.forEach((renderer) => {
+        if (renderer.isLoaded && !renderer.container.closest('[hidden]')) {
+          renderer.renderPages().catch(renderer.showErrorState);
+        }
+      });
+    }, 220);
+  });
 
-  if (!menuPages || !menuStatus || !window.pdfjsLib) {
-    return;
+  hasBoundResizeListener = true;
+};
+
+const renderPdfToGrid = async (pdfUrl, containerElement, statusElement, options = {}) => {
+  if (!containerElement || !statusElement || !window.pdfjsLib) {
+    return null;
   }
 
-  const pdfPath = './uploads/menu.pdf';
-  const workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-  const loadingMessage = 'Indlæser menu...';
-  const errorMessage = 'Menuen kan ikke vises lige nu. Brug knappen herover eller kontakt os.';
+  if (pdfGridRenderers.has(containerElement)) {
+    return pdfGridRenderers.get(containerElement);
+  }
+
+  const loadingMessage = options.loadingMessage || 'Indlæser menu...';
+  const idleMessage = options.idleMessage || 'Vælg arrangementet for at indlæse menuen.';
+  const errorMessage = options.errorMessage || 'Menuen kan ikke vises lige nu. Brug knapperne herover eller kontakt os.';
+  const ariaLabelPrefix = options.ariaLabelPrefix || 'Menu side';
+  const encodedPdfUrl = encodeURI(pdfUrl);
+
   let pdfDocument = null;
-  let resizeTimeout = null;
   let renderCycle = 0;
 
   const showErrorState = () => {
-    menuStatus.textContent = errorMessage;
-    menuStatus.classList.add('menu-status-error');
-    menuStatus.hidden = false;
-    menuPages.innerHTML = '';
+    statusElement.textContent = errorMessage;
+    statusElement.classList.add('menu-status-error');
+    statusElement.hidden = false;
+    containerElement.innerHTML = '';
   };
 
   const renderPages = async () => {
@@ -63,13 +85,14 @@ const initializeMenuPdf = async () => {
     renderCycle += 1;
     const activeRenderCycle = renderCycle;
 
-    menuPages.innerHTML = '';
-    menuStatus.textContent = loadingMessage;
-    menuStatus.classList.remove('menu-status-error');
-    menuStatus.hidden = false;
+    containerElement.innerHTML = '';
+    statusElement.textContent = loadingMessage;
+    statusElement.classList.remove('menu-status-error');
+    statusElement.hidden = false;
 
-    const containerWidth = menuPages.clientWidth;
+    const containerWidth = containerElement.clientWidth;
     if (!containerWidth) {
+      statusElement.textContent = idleMessage;
       return;
     }
 
@@ -79,7 +102,7 @@ const initializeMenuPdf = async () => {
 
       const pageWrapper = document.createElement('div');
       pageWrapper.className = 'menu-page';
-      menuPages.appendChild(pageWrapper);
+      containerElement.appendChild(pageWrapper);
 
       const wrapperStyles = window.getComputedStyle(pageWrapper);
       const wrapperHorizontalPadding =
@@ -94,7 +117,7 @@ const initializeMenuPdf = async () => {
       canvas.className = 'menu-page-canvas';
       canvas.width = Math.floor(viewport.width);
       canvas.height = Math.floor(viewport.height);
-      canvas.setAttribute('aria-label', `Menu side ${pageNumber}`);
+      canvas.setAttribute('aria-label', `${ariaLabelPrefix} ${pageNumber}`);
 
       const context = canvas.getContext('2d', { alpha: false });
       await pageHandle.render({ canvasContext: context, viewport }).promise;
@@ -106,30 +129,72 @@ const initializeMenuPdf = async () => {
       pageWrapper.appendChild(canvas);
     }
 
-    menuStatus.hidden = true;
+    statusElement.hidden = true;
   };
 
-  try {
-    window.pdfjsLib.GlobalWorkerOptions.workerSrc = workerSrc;
-    const loadingTask = window.pdfjsLib.getDocument(pdfPath);
-    pdfDocument = await loadingTask.promise;
-    await renderPages();
+  const loadAndRender = async () => {
+    try {
+      if (!window.pdfjsLib.GlobalWorkerOptions.workerSrc) {
+        window.pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorkerSrc;
+      }
 
-    window.addEventListener('resize', () => {
-      window.clearTimeout(resizeTimeout);
-      resizeTimeout = window.setTimeout(() => {
-        renderPages().catch(showErrorState);
-      }, 180);
-    });
-  } catch (error) {
-    showErrorState();
+      if (!pdfDocument) {
+        statusElement.textContent = loadingMessage;
+        statusElement.classList.remove('menu-status-error');
+        statusElement.hidden = false;
+        const loadingTask = window.pdfjsLib.getDocument(encodedPdfUrl);
+        pdfDocument = await loadingTask.promise;
+      }
+
+      await renderPages();
+    } catch (error) {
+      showErrorState();
+    }
+  };
+
+  const renderer = {
+    container: containerElement,
+    status: statusElement,
+    showErrorState,
+    renderPages,
+    ensureRendered: loadAndRender,
+    get isLoaded() {
+      return Boolean(pdfDocument);
+    },
+  };
+
+  pdfGridRenderers.set(containerElement, renderer);
+  bindPdfResizeHandler();
+
+  return renderer;
+};
+
+const initializeMenuPdf = async () => {
+  if (document.body.dataset.page !== 'menu') {
+    return;
+  }
+
+  const menuPages = document.querySelector('#menu-pages');
+  const menuStatus = document.querySelector('#menu-status');
+
+  if (!menuPages || !menuStatus || !window.pdfjsLib) {
+    return;
+  }
+
+  const renderer = await renderPdfToGrid('./uploads/menu.pdf', menuPages, menuStatus, {
+    loadingMessage: 'Indlæser menu...',
+    errorMessage: 'Menuen kan ikke vises lige nu. Brug knappen herover eller kontakt os.',
+    ariaLabelPrefix: 'Menu side',
+  });
+
+  if (renderer) {
+    await renderer.ensureRendered();
   }
 };
 
 initializeMenuPdf();
 
-
-const initializeArrangementSelector = () => {
+const initializeArrangementSelector = async () => {
   if (document.body.dataset.page !== 'arrangementer') {
     return;
   }
@@ -142,13 +207,42 @@ const initializeArrangementSelector = () => {
     return;
   }
 
+  const arrangementRenderers = new Map();
+
   const hideAllSections = () => {
     arrangementCards.forEach((card) => {
       card.hidden = true;
     });
   };
 
-  const updateArrangementDisplay = () => {
+  const showSectionMenu = async (sectionElement) => {
+    const menuCard = sectionElement.querySelector('.arrangement-menu-card');
+    const menuPages = sectionElement.querySelector('.menu-pages');
+    const menuStatus = sectionElement.querySelector('.menu-status');
+
+    if (!menuCard || !menuPages || !menuStatus || !window.pdfjsLib) {
+      return;
+    }
+
+    if (!arrangementRenderers.has(sectionElement.id)) {
+      const pdfUrl = menuCard.dataset.arrangementPdf;
+      const renderer = await renderPdfToGrid(pdfUrl, menuPages, menuStatus, {
+        loadingMessage: 'Indlæser menu...',
+        idleMessage: 'Vælg arrangementet for at indlæse menuen.',
+        errorMessage: 'Menuen kan ikke vises lige nu. Brug knapperne herover eller kontakt os.',
+        ariaLabelPrefix: 'Menu side',
+      });
+
+      arrangementRenderers.set(sectionElement.id, renderer);
+    }
+
+    const renderer = arrangementRenderers.get(sectionElement.id);
+    if (renderer && !renderer.isLoaded) {
+      await renderer.ensureRendered();
+    }
+  };
+
+  const updateArrangementDisplay = async () => {
     const selectedArrangement = arrangementSelect.value;
 
     hideAllSections();
@@ -162,10 +256,14 @@ const initializeArrangementSelector = () => {
     if (activeSection) {
       activeSection.hidden = false;
       defaultMessage.hidden = true;
+      await showSectionMenu(activeSection);
     }
   };
 
-  arrangementSelect.addEventListener('change', updateArrangementDisplay);
+  arrangementSelect.addEventListener('change', () => {
+    updateArrangementDisplay();
+  });
+
   hideAllSections();
   defaultMessage.hidden = false;
 };
