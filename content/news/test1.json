@@ -1,0 +1,11 @@
+{
+  "id": "test1",
+  "title": "Virker det her nu?",
+  "date": "2026-02-28",
+  "excerpt": "Dette er en test!",
+  "body": "Hvis du kan læse dette, så virker testen faktisk",
+  "images": [
+    "/uploads/mad-6.jpg"
+  ],
+  "pdf": "/uploads/Menu - Fødselsdag.pdf"
+}
