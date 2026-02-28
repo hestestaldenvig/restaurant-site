@@ -107,6 +107,9 @@ window.addEventListener('pageshow', closeMobileNavigation);
 
 const pdfWorkerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 const pdfGridRenderers = new Map();
+const pdfResizeDebounceMs = 260;
+const pdfMobileViewportMaxWidth = 768;
+const pdfResizeWidthThreshold = 24;
 let hasBoundResizeListener = false;
 let resizeDebounceHandle = null;
 
@@ -119,11 +122,11 @@ const bindPdfResizeHandler = () => {
     window.clearTimeout(resizeDebounceHandle);
     resizeDebounceHandle = window.setTimeout(() => {
       pdfGridRenderers.forEach((renderer) => {
-        if (renderer.isLoaded && !renderer.container.closest('[hidden]')) {
-          renderer.renderPages().catch(renderer.showErrorState);
+        if (renderer.isLoaded && !renderer.container.closest('[hidden]') && renderer.shouldRerenderOnResize()) {
+          renderer.renderPages({ reason: 'resize' }).catch(renderer.showErrorState);
         }
       });
-    }, 220);
+    }, pdfResizeDebounceMs);
   });
 
   hasBoundResizeListener = true;
@@ -154,6 +157,7 @@ const renderPdfToGrid = async (pdfUrl, containerElement, statusElement, options 
 
   let pdfDocument = null;
   let renderCycle = 0;
+  let lastRenderedContainerWidth = 0;
 
   const showErrorState = (message) => {
     const fallbackMessage = `${baseErrorMessage} (sti: ${pdfUrl})`;
@@ -166,6 +170,7 @@ const renderPdfToGrid = async (pdfUrl, containerElement, statusElement, options 
     }
 
     containerElement.innerHTML = '';
+    containerElement.style.minHeight = '';
     if (!statusElement) {
       const errorNotice = document.createElement('p');
       errorNotice.className = 'menu-status menu-status-error';
@@ -174,19 +179,9 @@ const renderPdfToGrid = async (pdfUrl, containerElement, statusElement, options 
     }
   };
 
-  const renderPages = async () => {
+  const renderPages = async ({ reason = 'default' } = {}) => {
     if (!pdfDocument) {
       return;
-    }
-
-    renderCycle += 1;
-    const activeRenderCycle = renderCycle;
-
-    containerElement.innerHTML = '';
-    if (statusElement) {
-      statusElement.textContent = loadingMessage;
-      statusElement.classList.remove('menu-status-error');
-      statusElement.hidden = false;
     }
 
     const containerWidth = containerElement.clientWidth;
@@ -197,24 +192,52 @@ const renderPdfToGrid = async (pdfUrl, containerElement, statusElement, options 
       return;
     }
 
+    if (reason === 'resize' && window.innerWidth <= pdfMobileViewportMaxWidth) {
+      return;
+    }
+
+    if (reason === 'resize' && lastRenderedContainerWidth > 0) {
+      const widthDelta = Math.abs(containerWidth - lastRenderedContainerWidth);
+      if (widthDelta < pdfResizeWidthThreshold) {
+        return;
+      }
+    }
+
+    renderCycle += 1;
+    const activeRenderCycle = renderCycle;
+
+    const placeholderMinHeight = Math.max(Math.round(containerElement.getBoundingClientRect().height), 320);
+    containerElement.innerHTML = '';
+    containerElement.style.minHeight = `${placeholderMinHeight}px`;
+
+    const loadingPlaceholder = document.createElement('div');
+    loadingPlaceholder.className = 'menu-page';
+    loadingPlaceholder.style.minHeight = `${placeholderMinHeight}px`;
+    containerElement.appendChild(loadingPlaceholder);
+
+    if (statusElement) {
+      statusElement.textContent = loadingMessage;
+      statusElement.classList.remove('menu-status-error');
+      statusElement.hidden = false;
+    }
+
+    const wrapperStyles = window.getComputedStyle(loadingPlaceholder);
+    const wrapperHorizontalPadding =
+      (Number.parseFloat(wrapperStyles.paddingLeft || '0') || 0) +
+      (Number.parseFloat(wrapperStyles.paddingRight || '0') || 0);
+    const renderWidth = Math.max(containerWidth - wrapperHorizontalPadding, 1);
+
     const pageCount = maxPages ? Math.min(pdfDocument.numPages, maxPages) : pdfDocument.numPages;
+    const pageFragment = document.createDocumentFragment();
 
     for (let pageNumber = 1; pageNumber <= pageCount; pageNumber += 1) {
       const pageHandle = await pdfDocument.getPage(pageNumber);
       const baseViewport = pageHandle.getViewport({ scale: 1 });
+      const scale = renderWidth / baseViewport.width;
+      const viewport = pageHandle.getViewport({ scale });
 
       const pageWrapper = document.createElement('div');
       pageWrapper.className = 'menu-page';
-      containerElement.appendChild(pageWrapper);
-
-      const wrapperStyles = window.getComputedStyle(pageWrapper);
-      const wrapperHorizontalPadding =
-        (Number.parseFloat(wrapperStyles.paddingLeft || '0') || 0) +
-        (Number.parseFloat(wrapperStyles.paddingRight || '0') || 0);
-      const wrapperWidth = pageWrapper.getBoundingClientRect().width || containerWidth;
-      const renderWidth = Math.max(wrapperWidth - wrapperHorizontalPadding, 1);
-      const scale = renderWidth / baseViewport.width;
-      const viewport = pageHandle.getViewport({ scale });
 
       const canvas = document.createElement('canvas');
       canvas.className = 'menu-page-canvas';
@@ -230,7 +253,16 @@ const renderPdfToGrid = async (pdfUrl, containerElement, statusElement, options 
       }
 
       pageWrapper.appendChild(canvas);
+      pageFragment.appendChild(pageWrapper);
     }
+
+    if (activeRenderCycle !== renderCycle) {
+      return;
+    }
+
+    containerElement.replaceChildren(pageFragment);
+    containerElement.style.minHeight = '';
+    lastRenderedContainerWidth = containerWidth;
 
     if (statusElement) {
       statusElement.hidden = true;
@@ -272,6 +304,18 @@ const renderPdfToGrid = async (pdfUrl, containerElement, statusElement, options 
     showErrorState,
     renderPages,
     ensureRendered: loadAndRender,
+    shouldRerenderOnResize() {
+      if (window.innerWidth <= pdfMobileViewportMaxWidth) {
+        return false;
+      }
+
+      if (!lastRenderedContainerWidth) {
+        return true;
+      }
+
+      const currentWidth = containerElement.clientWidth;
+      return Math.abs(currentWidth - lastRenderedContainerWidth) >= pdfResizeWidthThreshold;
+    },
     get isLoaded() {
       return Boolean(pdfDocument);
     },
