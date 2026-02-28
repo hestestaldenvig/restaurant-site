@@ -602,12 +602,23 @@ const escapeHtml = (value) =>
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
 
+const normalizeNewsImages = (images = []) => {
+  if (!Array.isArray(images)) {
+    return [];
+  }
+
+  return images
+    .map((imageItem) => (typeof imageItem === 'string' ? imageItem : imageItem?.image || imageItem?.url || ''))
+    .filter(Boolean);
+};
+
 const renderNewsImages = (images = []) => {
-  if (!Array.isArray(images) || !images.length) {
+  const normalizedImages = normalizeNewsImages(images);
+  if (!normalizedImages.length) {
     return '';
   }
 
-  const imageItems = images
+  const imageItems = normalizedImages
     .map(
       (imagePath, index) => `
       <li>
@@ -629,7 +640,13 @@ const fetchNewsPosts = async () => {
   }
 
   const newsData = await response.json();
+  const usesWrappedPosts = !Array.isArray(newsData);
   const newsPosts = Array.isArray(newsData) ? newsData : newsData?.posts;
+
+  if (usesWrappedPosts && !Array.isArray(newsPosts)) {
+    throw new Error('Nyhedsdata har ugyldig struktur. Forventede nøgle: posts.');
+  }
+
   if (!Array.isArray(newsPosts)) {
     return [];
   }
@@ -651,7 +668,7 @@ const initializeNewsOverview = async () => {
   try {
     const posts = await fetchNewsPosts();
     if (!posts.length) {
-      newsList.innerHTML = '<p>Der er ingen nyheder endnu.</p>';
+      newsList.innerHTML = '<p>Der er ingen nyheder endnu. Tilføj en nyhed i admin for at vise indhold her.</p>';
       return;
     }
 
@@ -682,7 +699,7 @@ const initializeNewsOverview = async () => {
       }
     });
   } catch (error) {
-    newsList.innerHTML = '<p>Kunne ikke indlæse nyheder. Prøv igen senere.</p>';
+    newsList.innerHTML = '<p>Nyheder kunne ikke vises. Kontrollér at content/news.json indeholder en posts-liste.</p>';
   }
 };
 
@@ -754,7 +771,7 @@ const initializeSingleNews = async () => {
       }
     }
   } catch (error) {
-    article.innerHTML = '<p>Nyheden kunne ikke indlæses lige nu.</p><a class="news-back-link" href="nyheder.html">Tilbage til nyheder</a>';
+    article.innerHTML = '<p>Nyheden kunne ikke vises. Kontrollér at content/news.json indeholder en posts-liste.</p><a class="news-back-link" href="nyheder.html">Tilbage til nyheder</a>';
   }
 };
 

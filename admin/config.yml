@@ -7,56 +7,7 @@ public_folder: "/uploads"
 
 collections:
   - name: "news"
-    label: "Nyheder (enkeltfiler)"
-    label_singular: "Nyhed"
-    folder: "content/news"
-    create: true
-    format: "json"
-    extension: "json"
-    slug: "{{fields.id}}"
-    summary: "{{fields.date}} — {{fields.title}}"
-    fields:
-      - label: "ID"
-        name: "id"
-        widget: "string"
-        required: true
-        hint: "Unik slug, fx valentinsdag-i-hestestalden-2026"
-      - label: "Titel"
-        name: "title"
-        widget: "string"
-        required: true
-      - label: "Dato"
-        name: "date"
-        widget: "datetime"
-        required: true
-        format: "YYYY-MM-DD"
-        date_format: "YYYY-MM-DD"
-        time_format: false
-      - label: "Uddrag"
-        name: "excerpt"
-        widget: "text"
-        required: true
-      - label: "Brødtekst"
-        name: "body"
-        widget: "markdown"
-        required: true
-      - label: "Billeder"
-        name: "images"
-        widget: "list"
-        required: false
-        hint: "Valgfrit: upload et eller flere billeder til nyheden"
-        field:
-          label: "Billede"
-          name: "image"
-          widget: "image"
-      - label: "PDF"
-        name: "pdf"
-        widget: "file"
-        required: false
-        hint: "Valgfrit: vedhæft en PDF"
-
-  - name: "news_index"
-    label: "Nyhedsindeks (hjemmesiden læser herfra)"
+    label: "Nyheder"
     files:
       - label: "Nyhedsoversigt"
         name: "news_index"
@@ -68,7 +19,7 @@ collections:
             summary: "{{fields.date}} — {{fields.title}}"
             hint: "Tilføj/redigér nyheder her, så vises de på hjemmesiden"
             fields:
-              - { label: "ID", name: "id", widget: "string", required: true, hint: "Unik slug" }
+              - { label: "ID", name: "id", widget: "string", required: true, hint: "Unik slug (skal være unik)", pattern: ["^[a-z0-9]+(?:-[a-z0-9]+)*$", "Brug små bogstaver, tal og bindestreger"] }
               - { label: "Titel", name: "title", widget: "string", required: true }
               - { label: "Dato", name: "date", widget: "datetime", required: true, format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false }
               - { label: "Uddrag", name: "excerpt", widget: "text", required: true }
