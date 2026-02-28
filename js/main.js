@@ -1,3 +1,28 @@
+const netlifyIdentityRedirectTokenKeys = [
+  'invite_token',
+  'confirmation_token',
+  'recovery_token',
+  'access_token',
+  'token',
+];
+
+const shouldRedirectToAdminForIdentityToken = () => {
+  const { pathname, search, hash } = window.location;
+  const isAdminPath = pathname === '/admin' || pathname === '/admin/';
+
+  if (isAdminPath) {
+    return false;
+  }
+
+  const urlState = `${search}${hash}`;
+  return netlifyIdentityRedirectTokenKeys.some((tokenKey) => urlState.includes(tokenKey));
+};
+
+if (shouldRedirectToAdminForIdentityToken()) {
+  const redirectSuffix = `${window.location.search}${window.location.hash}`;
+  window.location.replace(`/admin/${redirectSuffix}`);
+}
+
 const MOBILE_BREAKPOINT = 48 * 16;
 const page = document.body.dataset.page;
 const menuToggle = document.querySelector('.menu-toggle');
