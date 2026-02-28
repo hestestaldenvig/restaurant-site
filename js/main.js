@@ -1,32 +1,88 @@
+const MOBILE_BREAKPOINT = 48 * 16;
+const page = document.body.dataset.page;
 const menuToggle = document.querySelector('.menu-toggle');
 const primaryNav = document.querySelector('#primary-navigation');
-
-if (menuToggle && primaryNav) {
-  menuToggle.addEventListener('click', () => {
-    const expanded = menuToggle.getAttribute('aria-expanded') === 'true';
-    menuToggle.setAttribute('aria-expanded', String(!expanded));
-    primaryNav.classList.toggle('is-open');
-  });
-}
-
-const page = document.body.dataset.page;
 const navLinks = document.querySelectorAll('.primary-nav a');
 
-navLinks.forEach((link) => {
-  if (link.dataset.page === page) {
-    link.classList.add('active');
-    link.setAttribute('aria-current', 'page');
+let hasBoundResponsiveLayoutListener = false;
+let responsiveLayoutDebounceHandle = null;
+
+const closeMobileNavigation = () => {
+  if (!primaryNav || !menuToggle) {
+    return;
   }
 
-  link.addEventListener('click', () => {
-    if (primaryNav && primaryNav.classList.contains('is-open')) {
-      primaryNav.classList.remove('is-open');
-      if (menuToggle) {
-        menuToggle.setAttribute('aria-expanded', 'false');
-      }
+  primaryNav.classList.remove('is-open');
+  menuToggle.setAttribute('aria-expanded', 'false');
+};
+
+const ensureMainContentVisible = () => {
+  const pageContent = document.querySelector('.page-content');
+  const mainContent = document.querySelector('main');
+
+  [pageContent, mainContent].forEach((element) => {
+    if (!element) {
+      return;
     }
+
+    element.removeAttribute('hidden');
+    element.classList.remove('hidden');
   });
-});
+};
+
+const applyResponsiveLayoutState = () => {
+  ensureMainContentVisible();
+
+  if (window.innerWidth >= MOBILE_BREAKPOINT) {
+    closeMobileNavigation();
+  }
+};
+
+const initializeSiteNavigation = () => {
+  navLinks.forEach((link) => {
+    if (link.dataset.page === page) {
+      link.classList.add('active');
+      link.setAttribute('aria-current', 'page');
+    }
+
+    link.addEventListener('click', closeMobileNavigation);
+  });
+
+  if (menuToggle && primaryNav) {
+    menuToggle.addEventListener('click', () => {
+      const expanded = menuToggle.getAttribute('aria-expanded') === 'true';
+      menuToggle.setAttribute('aria-expanded', String(!expanded));
+      primaryNav.classList.toggle('is-open');
+    });
+  }
+};
+
+const bindResponsiveLayoutHandler = () => {
+  if (hasBoundResponsiveLayoutListener) {
+    return;
+  }
+
+  window.addEventListener('resize', () => {
+    window.clearTimeout(responsiveLayoutDebounceHandle);
+    responsiveLayoutDebounceHandle = window.setTimeout(() => {
+      applyResponsiveLayoutState();
+    }, 180);
+  });
+
+  hasBoundResponsiveLayoutListener = true;
+};
+
+const initializeResponsiveLayout = () => {
+  initializeSiteNavigation();
+  applyResponsiveLayoutState();
+  bindResponsiveLayoutHandler();
+};
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initializeResponsiveLayout, { once: true });
+} else {
+  initializeResponsiveLayout();
+}
 
 const pdfWorkerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 const pdfGridRenderers = new Map();
