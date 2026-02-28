@@ -598,7 +598,7 @@ const renderNewsImages = (images = []) => {
 };
 
 const fetchNewsPosts = async () => {
-  const response = await fetch('./content/news.json');
+  const response = await fetch('/content/news.json');
   if (!response.ok) {
     throw new Error('Kunne ikke hente nyheder.');
   }
@@ -612,14 +612,15 @@ const fetchNewsPosts = async () => {
 };
 
 const initializeNewsOverview = async () => {
-  if (window.location.pathname.split('/').pop() !== 'nyheder.html') {
+  const newsList = document.querySelector('#news-list, #news-overview-list');
+  const pathname = window.location.pathname || '';
+  const isNewsPage = pathname.endsWith('nyheder.html') || pathname === '/nyheder' || Boolean(newsList);
+
+  if (!isNewsPage || !newsList) {
     return;
   }
 
-  const newsList = document.querySelector('#news-overview-list');
-  if (!newsList) {
-    return;
-  }
+  newsList.innerHTML = '<p>Indlæser nyheder...</p>';
 
   try {
     const posts = await fetchNewsPosts();
@@ -637,7 +638,7 @@ const initializeNewsOverview = async () => {
           <p>${escapeHtml(post.excerpt || '')}</p>
           ${renderNewsImages(post.images)}
           ${post.pdf ? `<div class="news-pdf-preview" data-news-pdf-preview="${escapeHtml(post.pdf.url)}"></div>` : ''}
-          <a class="news-read-more" href="nyhed.html?id=${encodeURIComponent(post.id)}">Læs mere</a>
+          <a class="news-read-more" href="/nyhed.html?id=${encodeURIComponent(post.id)}">Læs mere</a>
         </article>
       `,
       )
@@ -651,7 +652,7 @@ const initializeNewsOverview = async () => {
       }
     });
   } catch (error) {
-    newsList.innerHTML = '<p>Nyhederne kunne ikke indlæses lige nu.</p>';
+    newsList.innerHTML = '<p>Kunne ikke indlæse nyheder. Prøv igen senere.</p>';
   }
 };
 
