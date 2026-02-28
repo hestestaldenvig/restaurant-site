@@ -27,6 +27,17 @@
       "excerpt": "I køkkenet arbejder vi med lokale råvarer, der følger årstidens smag og kvalitet.",
       "body": "Når vi planlægger menuen, tager vi udgangspunkt i det, sæsonen giver os. Det betyder mere smag på tallerkenen og retter, der skifter i takt med årstiden.",
       "images": []
+    },
+    {
+      "id": "test1",
+      "title": "Ny test",
+      "date": "2026-02-28",
+      "excerpt": "Dette er en test",
+      "body": "Hvis du kan læse dette, så er testen successfuld",
+      "images": [
+        "/uploads/mad-6.jpg"
+      ],
+      "pdf": "/uploads/Menu - Generalforsamling.pdf"
     }
   ]
 }
