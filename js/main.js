@@ -688,7 +688,7 @@ const initializeSingleNews = async () => {
       .split(/\n{2,}/)
       .map((paragraph) => paragraph.trim())
       .filter(Boolean)
-      .map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`)
+      .map((paragraph) => `<p>${escapeHtml(paragraph).replace(/\n/g, '<br />')}</p>`)
       .join('');
 
     article.innerHTML = `
