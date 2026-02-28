@@ -69,7 +69,7 @@ a {
   justify-content: space-between;
   gap: 1.25rem;
   padding: 0.75rem 0 0.95rem;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
 .brand {
@@ -105,6 +105,8 @@ a {
   background: var(--surface);
   border-radius: 999px;
   padding: 0;
+  margin: 0 0 0 auto;
+  flex-shrink: 0;
   cursor: pointer;
 }
 
@@ -949,13 +951,16 @@ p + h3 {
   }
 
   .topbar {
-    justify-content: center;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: nowrap;
     padding-top: 0.6rem;
   }
 
   .brand {
-    width: 100%;
-    justify-content: center;
+    width: auto;
+    justify-content: flex-start;
+    min-width: 0;
     gap: 0.65rem;
   }
 
