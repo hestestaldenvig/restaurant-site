@@ -628,7 +628,8 @@ const fetchNewsPosts = async () => {
     throw new Error('Kunne ikke hente nyheder.');
   }
 
-  const newsPosts = await response.json();
+  const newsData = await response.json();
+  const newsPosts = Array.isArray(newsData) ? newsData : newsData?.posts;
   if (!Array.isArray(newsPosts)) {
     return [];
   }
@@ -656,16 +657,20 @@ const initializeNewsOverview = async () => {
 
     newsList.innerHTML = posts
       .map(
-        (post) => `
+        (post) => {
+          const pdfUrl = typeof post.pdf === 'string' ? post.pdf : post.pdf?.url;
+
+          return `
         <article class="news-item">
           <p class="meta">${formatNewsDate(post.date)}</p>
           <h2>${escapeHtml(post.title)}</h2>
           <p>${escapeHtml(post.excerpt || '')}</p>
           ${renderNewsImages(post.images)}
-          ${post.pdf ? `<div class="news-pdf-preview" data-news-pdf-preview="${escapeHtml(post.pdf.url)}"></div>` : ''}
+          ${pdfUrl ? `<div class="news-pdf-preview" data-news-pdf-preview="${escapeHtml(pdfUrl)}"></div>` : ''}
           <a class="news-read-more" href="/nyhed.html?id=${encodeURIComponent(post.id)}">Læs mere</a>
         </article>
-      `,
+      `;
+        },
       )
       .join('');
 
@@ -710,6 +715,9 @@ const initializeSingleNews = async () => {
       return;
     }
 
+    const pdfUrl = typeof post.pdf === 'string' ? post.pdf : post.pdf?.url;
+    const pdfTitle = typeof post.pdf === 'object' ? post.pdf?.title : null;
+
     const bodyParagraphs = String(post.body || '')
       .split(/\n{2,}/)
       .map((paragraph) => paragraph.trim())
@@ -724,14 +732,14 @@ const initializeSingleNews = async () => {
       ${bodyParagraphs}
       ${renderNewsImages(post.images)}
       ${
-        post.pdf
+        pdfUrl
           ? `
         <section class="news-pdf-section">
-          <h2>${escapeHtml(post.pdf.title || 'Vedhæftet PDF')}</h2>
+          <h2>${escapeHtml(pdfTitle || 'Vedhæftet PDF')}</h2>
           <div id="news-pdf-pages" class="menu-pages news-pdf-pages"></div>
           <div class="menu-actions news-pdf-actions">
-            <a class="btn btn-primary" href="${escapeHtml(post.pdf.url)}" target="_blank" rel="noopener">Åbn PDF</a>
-            <a class="btn btn-secondary" href="${escapeHtml(post.pdf.url)}" download>Download PDF</a>
+            <a class="btn btn-primary" href="${escapeHtml(pdfUrl)}" target="_blank" rel="noopener">Åbn PDF</a>
+            <a class="btn btn-secondary" href="${escapeHtml(pdfUrl)}" download>Download PDF</a>
           </div>
         </section>
       `
@@ -739,10 +747,10 @@ const initializeSingleNews = async () => {
       }
     `;
 
-    if (post.pdf) {
+    if (pdfUrl) {
       const pdfContainer = article.querySelector('#news-pdf-pages');
       if (pdfContainer) {
-        await renderPdfAllPages(post.pdf.url, pdfContainer);
+        await renderPdfAllPages(pdfUrl, pdfContainer);
       }
     }
   } catch (error) {

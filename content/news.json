@@ -1,30 +1,32 @@
-[
-  {
-    "id": "valentinsdag-i-hestestalden-2026",
-    "title": "Valentinsdag i Hestestalden",
-    "date": "2026-02-14",
-    "excerpt": "Invitér din bedre halvdel til en stemningsfuld valentinsaften med bobler, sæsonmenu og levende lys i Hestestalden.",
-    "body": "Lørdag den 14. februar dækker vi op til en særlig valentinsaften i Hestestalden. Vi starter aftenen med et glas bobler, hvorefter vores køkken serverer en sammensat menu med fokus på sæsonens bedste råvarer.\n\nMenuen er skabt til at blive nydt i roligt tempo, så der er god tid til nærvær og hygge ved bordet. Vi tilbyder naturligvis også en alkoholfri menuledsager, hvis det ønskes.\n\nAntallet af pladser er begrænset, så vi anbefaler bordbestilling i god tid.",
-    "images": [],
-    "pdf": {
-      "url": "./uploads/vlt-menu.pdf",
-      "title": "Valentinsmenu (PDF)"
+{
+  "posts": [
+    {
+      "id": "valentinsdag-i-hestestalden-2026",
+      "title": "Valentinsdag i Hestestalden",
+      "date": "2026-02-14",
+      "excerpt": "Invitér din bedre halvdel til en stemningsfuld valentinsaften med bobler, sæsonmenu og levende lys i Hestestalden.",
+      "body": "Lørdag den 14. februar dækker vi op til en særlig valentinsaften i Hestestalden. Vi starter aftenen med et glas bobler, hvorefter vores køkken serverer en sammensat menu med fokus på sæsonens bedste råvarer.\n\nMenuen er skabt til at blive nydt i roligt tempo, så der er god tid til nærvær og hygge ved bordet. Vi tilbyder naturligvis også en alkoholfri menuledsager, hvis det ønskes.\n\nAntallet af pladser er begrænset, så vi anbefaler bordbestilling i god tid.",
+      "images": [],
+      "pdf": {
+        "url": "./uploads/vlt-menu.pdf",
+        "title": "Valentinsmenu (PDF)"
+      }
+    },
+    {
+      "id": "ny-frokostmenu-2026",
+      "title": "Ny frokostmenu",
+      "date": "2026-01-20",
+      "excerpt": "Vores nye frokostmenu er klar med klassiske favoritter og et par nye sæsonretter.",
+      "body": "Vi har opdateret frokostkortet med lune retter, smørrebrød og hjemmelavede specialiteter. Kig forbi til en god frokost i hyggelige omgivelser.",
+      "images": []
+    },
+    {
+      "id": "saesonens-raavarer-2025",
+      "title": "Sæsonens råvarer",
+      "date": "2025-11-18",
+      "excerpt": "I køkkenet arbejder vi med lokale råvarer, der følger årstidens smag og kvalitet.",
+      "body": "Når vi planlægger menuen, tager vi udgangspunkt i det, sæsonen giver os. Det betyder mere smag på tallerkenen og retter, der skifter i takt med årstiden.",
+      "images": []
     }
-  },
-  {
-    "id": "ny-frokostmenu-2026",
-    "title": "Ny frokostmenu",
-    "date": "2026-01-20",
-    "excerpt": "Vores nye frokostmenu er klar med klassiske favoritter og et par nye sæsonretter.",
-    "body": "Vi har opdateret frokostkortet med lune retter, smørrebrød og hjemmelavede specialiteter. Kig forbi til en god frokost i hyggelige omgivelser.",
-    "images": []
-  },
-  {
-    "id": "saesonens-raavarer-2025",
-    "title": "Sæsonens råvarer",
-    "date": "2025-11-18",
-    "excerpt": "I køkkenet arbejder vi med lokale råvarer, der følger årstidens smag og kvalitet.",
-    "body": "Når vi planlægger menuen, tager vi udgangspunkt i det, sæsonen giver os. Det betyder mere smag på tallerkenen og retter, der skifter i takt med årstiden.",
-    "images": []
-  }
-]
+  ]
+}

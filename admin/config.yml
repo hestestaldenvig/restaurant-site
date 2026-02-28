@@ -7,27 +7,158 @@ public_folder: "/uploads"
 
 collections:
   - name: "news"
-    label: "Nyheder"
+    label: "Nyheder (enkeltfiler)"
+    label_singular: "Nyhed"
     folder: "content/news"
     create: true
-    slug: "{{slug}}"
+    format: "json"
+    extension: "json"
+    slug: "{{fields.id}}"
+    summary: "{{fields.date}} — {{fields.title}}"
     fields:
-      - { label: "Titel", name: "title", widget: "string" }
-      - { label: "Dato", name: "date", widget: "datetime" }
-      - { label: "Uddrag", name: "excerpt", widget: "text" }
-      - { label: "Indhold", name: "body", widget: "markdown" }
-      - { label: "PDF (valgfri)", name: "pdf", widget: "file", required: false }
+      - label: "ID"
+        name: "id"
+        widget: "string"
+        required: true
+        hint: "Unik slug, fx valentinsdag-i-hestestalden-2026"
+      - label: "Titel"
+        name: "title"
+        widget: "string"
+        required: true
+      - label: "Dato"
+        name: "date"
+        widget: "datetime"
+        required: true
+        format: "YYYY-MM-DD"
+        date_format: "YYYY-MM-DD"
+        time_format: false
+      - label: "Uddrag"
+        name: "excerpt"
+        widget: "text"
+        required: true
+      - label: "Brødtekst"
+        name: "body"
+        widget: "markdown"
+        required: true
+      - label: "Billeder"
+        name: "images"
+        widget: "list"
+        required: false
+        hint: "Valgfrit: upload et eller flere billeder til nyheden"
+        field:
+          label: "Billede"
+          name: "image"
+          widget: "image"
+      - label: "PDF"
+        name: "pdf"
+        widget: "file"
+        required: false
+        hint: "Valgfrit: vedhæft en PDF"
 
-  - name: "menus"
-    label: "Menu PDF'er"
-    folder: "uploads"
-    create: false
-    fields:
-      - { label: "Fil", name: "file", widget: "file" }
+  - name: "news_index"
+    label: "Nyhedsindeks (hjemmesiden læser herfra)"
+    files:
+      - label: "Nyhedsoversigt"
+        name: "news_index"
+        file: "content/news.json"
+        fields:
+          - label: "Nyheder"
+            name: "posts"
+            widget: "list"
+            summary: "{{fields.date}} — {{fields.title}}"
+            hint: "Tilføj/redigér nyheder her, så vises de på hjemmesiden"
+            fields:
+              - { label: "ID", name: "id", widget: "string", required: true, hint: "Unik slug" }
+              - { label: "Titel", name: "title", widget: "string", required: true }
+              - { label: "Dato", name: "date", widget: "datetime", required: true, format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false }
+              - { label: "Uddrag", name: "excerpt", widget: "text", required: true }
+              - { label: "Brødtekst", name: "body", widget: "markdown", required: true }
+              - label: "Billeder"
+                name: "images"
+                widget: "list"
+                required: false
+                field: { label: "Billede", name: "image", widget: "image" }
+              - { label: "PDF", name: "pdf", widget: "file", required: false }
 
-  - name: "gallery"
-    label: "Galleri billeder"
-    folder: "uploads/gallery"
-    create: false
+  - name: "menuer"
+    label: "Menuer"
+    files:
+      - label: "Aftenmenu"
+        name: "aftenmenu"
+        file: "uploads/menu.pdf"
+        fields:
+          - { label: "PDF", name: "file", widget: "file", hint: "Upload ny aftenmenu (PDF)" }
+      - label: "Frokostmenu"
+        name: "frokostmenu"
+        file: "uploads/Menu-frokost.pdf"
+        fields:
+          - { label: "PDF", name: "file", widget: "file", hint: "Upload ny frokostmenu (PDF)" }
+
+  - name: "arrangement_menuer"
+    label: "Arrangement-menuer"
+    files:
+      - label: "Barnedåb"
+        name: "barnedaab"
+        file: "uploads/Menu - Barnedåb.pdf"
+        fields:
+          - { label: "PDF", name: "file", widget: "file" }
+      - label: "Bisættelse"
+        name: "bisaettelse"
+        file: "uploads/Menu - Bisættelse.pdf"
+        fields:
+          - { label: "PDF", name: "file", widget: "file" }
+      - label: "Firma arrangement"
+        name: "firma_arrangement"
+        file: "uploads/Menu - Firma arrangement.pdf"
+        fields:
+          - { label: "PDF", name: "file", widget: "file" }
+      - label: "Fødselsdag"
+        name: "foedselsdag"
+        file: "uploads/Menu - Fødselsdag.pdf"
+        fields:
+          - { label: "PDF", name: "file", widget: "file" }
+      - label: "Generalforsamling"
+        name: "generalforsamling"
+        file: "uploads/Menu - Generalforsamling.pdf"
+        fields:
+          - { label: "PDF", name: "file", widget: "file" }
+      - label: "Jubilæum"
+        name: "jubilaeum"
+        file: "uploads/Menu - Jubilæum.pdf"
+        fields:
+          - { label: "PDF", name: "file", widget: "file" }
+      - label: "Konfirmation"
+        name: "konfirmation"
+        file: "uploads/Menu - Konfirmation.pdf"
+        fields:
+          - { label: "PDF", name: "file", widget: "file" }
+      - label: "Mindesammenkomst"
+        name: "mindesammenkomst"
+        file: "uploads/Menu - Mindesammenkomst.pdf"
+        fields:
+          - { label: "PDF", name: "file", widget: "file" }
+
+  - name: "event_pdf"
+    label: "Valentins PDF"
+    files:
+      - label: "Valentinsmenu"
+        name: "valentinsmenu"
+        file: "uploads/vlt-menu.pdf"
+        fields:
+          - { label: "PDF", name: "file", widget: "file", hint: "Upload event/Valentins PDF" }
+
+  - name: "galleri_uploads"
+    label: "Galleri"
+    label_singular: "Galleri-billede"
+    folder: "content/gallery"
+    create: true
+    format: "json"
+    extension: "json"
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    media_folder: "uploads/gallery"
+    public_folder: "/uploads/gallery"
+    summary: "{{fields.title}}"
     fields:
-      - { label: "Billede", name: "image", widget: "image" }
+      - { label: "Titel", name: "title", widget: "string", required: true, hint: "Kun til overblik i admin" }
+      - { label: "Billede", name: "image", widget: "image", required: true, hint: "Uploades til uploads/gallery" }
+      - { label: "Alt-tekst", name: "alt", widget: "string", required: false, hint: "Valgfri beskrivelse" }
