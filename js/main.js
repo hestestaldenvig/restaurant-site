@@ -7,13 +7,20 @@ const navLinks = document.querySelectorAll('.primary-nav a');
 let hasBoundResponsiveLayoutListener = false;
 let responsiveLayoutDebounceHandle = null;
 
+const resetBodyScrollLock = () => {
+  document.body.classList.remove('menu-open');
+  document.body.style.overflow = '';
+};
+
 const closeMobileNavigation = () => {
   if (!primaryNav || !menuToggle) {
+    resetBodyScrollLock();
     return;
   }
 
   primaryNav.classList.remove('is-open');
   menuToggle.setAttribute('aria-expanded', 'false');
+  resetBodyScrollLock();
 };
 
 const ensureMainContentVisible = () => {
@@ -51,8 +58,17 @@ const initializeSiteNavigation = () => {
   if (menuToggle && primaryNav) {
     menuToggle.addEventListener('click', () => {
       const expanded = menuToggle.getAttribute('aria-expanded') === 'true';
-      menuToggle.setAttribute('aria-expanded', String(!expanded));
-      primaryNav.classList.toggle('is-open');
+      const shouldOpen = !expanded;
+
+      menuToggle.setAttribute('aria-expanded', String(shouldOpen));
+      primaryNav.classList.toggle('is-open', shouldOpen);
+
+      if (shouldOpen) {
+        document.body.classList.add('menu-open');
+        document.body.style.overflow = 'hidden';
+      } else {
+        resetBodyScrollLock();
+      }
     });
   }
 };
@@ -73,6 +89,7 @@ const bindResponsiveLayoutHandler = () => {
 };
 
 const initializeResponsiveLayout = () => {
+  resetBodyScrollLock();
   initializeSiteNavigation();
   applyResponsiveLayoutState();
   bindResponsiveLayoutHandler();
