@@ -83,10 +83,22 @@
         <div class="container">
           <article class="card kontakt-form-card">
             <h2>Forespørgsel</h2>
-            <form class="kontakt-form" id="kontakt-form" novalidate>
+            <form
+              class="kontakt-form"
+              id="kontakt-form"
+              name="forespoergsel"
+              method="POST"
+              data-netlify="true"
+              netlify-honeypot="bot-field"
+              novalidate
+            >
+              <input type="hidden" name="form-name" value="forespoergsel" />
+              <p hidden>
+                <label>Udfyld ikke dette felt: <input name="bot-field" /></label>
+              </p>
               <div class="form-field">
                 <label for="foresp-navn">Navn <span aria-hidden="true">*</span></label>
-                <input id="foresp-navn" name="navn" type="text" autocomplete="name" required />
+                <input id="foresp-navn" name="name" type="text" autocomplete="name" required />
               </div>
               <div class="form-field">
                 <label for="foresp-email">Email <span aria-hidden="true">*</span></label>
@@ -94,7 +106,7 @@
               </div>
               <div class="form-field">
                 <label for="foresp-telefon">Telefon</label>
-                <input id="foresp-telefon" name="telefon" type="tel" autocomplete="tel" />
+                <input id="foresp-telefon" name="phone" type="tel" autocomplete="tel" />
               </div>
               <div class="form-field form-field--full">
                 <label for="subject">Emne <span aria-hidden="true">*</span></label>
@@ -102,14 +114,13 @@
               </div>
               <div class="form-field form-field--full">
                 <label for="foresp-besked">Besked <span aria-hidden="true">*</span></label>
-                <textarea id="foresp-besked" name="besked" rows="5" required></textarea>
+                <textarea id="foresp-besked" name="message" rows="5" required></textarea>
               </div>
               <button class="btn btn-primary" type="submit">Send forespørgsel</button>
               <p class="form-required-note">Felter markeret med * er påkrævede.</p>
             </form>
             <p class="form-submit-message" id="foresp-feedback" role="status" aria-live="polite" hidden>
-              Tak! Send venligst din forespørgsel til
-              <a href="mailto:hestestaldenvig@gmail.com">hestestaldenvig@gmail.com</a>
+              Din forespørgsel er sendt. Vi vender tilbage hurtigst muligt.
             </p>
           </article>
         </div>
@@ -137,10 +148,15 @@
     <script>
       const kontaktForm = document.getElementById("kontakt-form");
       const forespFeedback = document.getElementById("foresp-feedback");
-      const forespFeedbackLink = forespFeedback ? forespFeedback.querySelector("a") : null;
+      const submitButton = kontaktForm ? kontaktForm.querySelector('button[type="submit"]') : null;
+
+      const encodeFormBody = (data) =>
+        Object.keys(data)
+          .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`)
+          .join("&");
 
       if (kontaktForm && forespFeedback) {
-        kontaktForm.addEventListener("submit", (event) => {
+        kontaktForm.addEventListener("submit", async (event) => {
           event.preventDefault();
 
           if (!kontaktForm.checkValidity()) {
@@ -148,20 +164,44 @@
             return;
           }
 
-          const formData = new FormData(kontaktForm);
-          const subjectValue = String(formData.get("subject") || "Forespørgsel").trim() || "Forespørgsel";
-
-          if (forespFeedbackLink) {
-            forespFeedbackLink.href = `mailto:hestestaldenvig@gmail.com?subject=${encodeURIComponent(subjectValue)}`;
+          if (submitButton) {
+            submitButton.disabled = true;
           }
 
-          forespFeedback.hidden = false;
-          kontaktForm.reset();
+          try {
+            const formData = new FormData(kontaktForm);
+            const payload = Object.fromEntries(formData.entries());
 
-          if (typeof clearStoredContactDraft === "function") {
-            clearStoredContactDraft();
-          } else {
-            localStorage.removeItem("contactFormDraft");
+            const response = await fetch("/", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+              },
+              body: encodeFormBody(payload),
+            });
+
+            if (!response.ok) {
+              throw new Error(`Netlify-indsendelse fejlede med status ${response.status}`);
+            }
+
+            forespFeedback.textContent = "Tak for din forespørgsel! Vi kontakter dig hurtigst muligt.";
+            forespFeedback.hidden = false;
+            kontaktForm.reset();
+
+            if (typeof clearStoredContactDraft === "function") {
+              clearStoredContactDraft();
+            } else {
+              localStorage.removeItem("contactFormDraft");
+            }
+          } catch (error) {
+            console.error("Kunne ikke sende forespørgslen.", error);
+            forespFeedback.textContent =
+              "Der opstod en fejl ved afsendelse. Prøv igen om et øjeblik eller kontakt os telefonisk.";
+            forespFeedback.hidden = false;
+          } finally {
+            if (submitButton) {
+              submitButton.disabled = false;
+            }
           }
         });
       }
