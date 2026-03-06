@@ -2,8 +2,8 @@ backend:
   name: git-gateway
   branch: main
 
-media_folder: "uploads/gallery"
-public_folder: "/uploads/gallery"
+media_folder: "uploads"
+public_folder: "/uploads"
 
 collections:
   - name: "news"
@@ -28,26 +28,28 @@ collections:
                 name: "images"
                 widget: "list"
                 required: false
-                field: { label: "Billede", name: "image", widget: "image" }
+                field: { label: "Billede", name: "image", widget: "image", media_folder: "uploads/gallery", public_folder: "/uploads/gallery" }
               - { label: "PDF", name: "pdf", widget: "file", required: false }
 
   - name: "menu_pdf_stier"
     label: "Menu PDF-stier"
+    media_folder: "uploads"
+    public_folder: "/uploads"
     files:
       - label: "Menuer og arrangementer"
         name: "menu_paths"
         file: "content/menus.json"
         fields:
-          - { label: "Aftenmenu", name: "aftenmenu", widget: "file", media_folder: "uploads", public_folder: "/uploads" }
-          - { label: "Frokostmenu", name: "frokostmenu", widget: "file", media_folder: "uploads", public_folder: "/uploads" }
-          - { label: "Barnedåb", name: "barnedaab", widget: "file", media_folder: "uploads", public_folder: "/uploads" }
-          - { label: "Bisættelse", name: "bisaettelse", widget: "file", media_folder: "uploads", public_folder: "/uploads" }
-          - { label: "Firmaarrangement", name: "firma", widget: "file", media_folder: "uploads", public_folder: "/uploads" }
-          - { label: "Fødselsdag", name: "foedselsdag", widget: "file", media_folder: "uploads", public_folder: "/uploads" }
-          - { label: "Generalforsamling", name: "generalforsamling", widget: "file", media_folder: "uploads", public_folder: "/uploads" }
-          - { label: "Jubilæum", name: "jubilaeum", widget: "file", media_folder: "uploads", public_folder: "/uploads" }
-          - { label: "Konfirmation", name: "konfirmation", widget: "file", media_folder: "uploads", public_folder: "/uploads" }
-          - { label: "Mindesammenkomst", name: "mindesammenkomst", widget: "file", media_folder: "uploads", public_folder: "/uploads" }
+          - { label: "Aftenmenu", name: "aftenmenu", widget: "file" }
+          - { label: "Frokostmenu", name: "frokostmenu", widget: "file" }
+          - { label: "Barnedåb", name: "barnedaab", widget: "file" }
+          - { label: "Bisættelse", name: "bisaettelse", widget: "file" }
+          - { label: "Firmaarrangement", name: "firma", widget: "file" }
+          - { label: "Fødselsdag", name: "foedselsdag", widget: "file" }
+          - { label: "Generalforsamling", name: "generalforsamling", widget: "file" }
+          - { label: "Jubilæum", name: "jubilaeum", widget: "file" }
+          - { label: "Konfirmation", name: "konfirmation", widget: "file" }
+          - { label: "Mindesammenkomst", name: "mindesammenkomst", widget: "file" }
 
   - name: "event_pdf"
     label: "Valentins PDF"
@@ -60,6 +62,8 @@ collections:
 
   - name: "galleri"
     label: "Galleri"
+    media_folder: "uploads/gallery"
+    public_folder: "/uploads/gallery"
     files:
       - label: "Galleri-billeder"
         name: "gallery"
@@ -75,6 +79,8 @@ collections:
 
   - name: "forside_slideshow"
     label: "Forside-slideshow"
+    media_folder: "uploads/gallery"
+    public_folder: "/uploads/gallery"
     files:
       - label: "Smagsglimt fra køkkenet"
         name: "home_slideshow"
