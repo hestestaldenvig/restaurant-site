@@ -98,18 +98,18 @@ collections:
         fields:
           - { label: "PDF", name: "file", widget: "file", hint: "Upload event/Valentins PDF" }
 
-  - name: "galleri_uploads"
+  - name: "galleri"
     label: "Galleri"
-    label_singular: "Galleri-billede"
-    folder: "content/gallery"
-    create: true
-    format: "json"
-    extension: "json"
-    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
-    media_folder: "uploads/gallery"
-    public_folder: "/uploads/gallery"
-    summary: "{{fields.title}}"
-    fields:
-      - { label: "Titel", name: "title", widget: "string", required: true, hint: "Kun til overblik i admin" }
-      - { label: "Billede", name: "image", widget: "image", required: true, hint: "Uploades til uploads/gallery" }
-      - { label: "Alt-tekst", name: "alt", widget: "string", required: false, hint: "Valgfri beskrivelse" }
+    files:
+      - label: "Galleri-billeder"
+        name: "gallery"
+        file: "content/gallery.json"
+        hint: "Upload galleribilleder her. Brug uploads/gallery som mappe for nye filer."
+        field:
+          label: "Billeder"
+          name: "items"
+          widget: "list"
+          summary: "{{fields.src}}"
+          fields:
+            - { label: "Billede", name: "src", widget: "image", required: true, media_folder: "uploads/gallery", public_folder: "/uploads/gallery" }
+            - { label: "Alt-tekst", name: "alt", widget: "string", required: false }

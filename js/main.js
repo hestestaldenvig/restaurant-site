@@ -777,6 +777,130 @@ const initializeSingleNews = async () => {
 
 initializeSingleNews();
 
+
+const defaultGalleryItems = [
+  {
+    src: 'uploads/gallery/mad-1.jpg',
+    alt: 'Ret fra Hestestalden med sæsonens råvarer',
+  },
+  {
+    src: 'uploads/gallery/mad-2.jpg',
+    alt: 'Hjemmelavet servering fra køkkenet i Hestestalden',
+  },
+  {
+    src: 'uploads/gallery/mad-3.jpg',
+    alt: 'Anrettet ret fra Hestestalden i varme nuancer',
+  },
+  {
+    src: 'uploads/gallery/mad-4.jpg',
+    alt: 'Rustik tallerkenservering fra Hestestalden',
+  },
+  {
+    src: 'uploads/gallery/mad-5.jpg',
+    alt: 'Velsmagende ret fra Hestestalden til frokost og aften',
+  },
+  {
+    src: 'uploads/gallery/mad-6.jpg',
+    alt: 'Klassisk madoplevelse fra Hestestalden',
+  },
+];
+
+const normalizeGalleryItems = (galleryData) => {
+  const sourceItems = Array.isArray(galleryData)
+    ? galleryData
+    : Array.isArray(galleryData?.items)
+      ? galleryData.items
+      : Array.isArray(galleryData?.images)
+        ? galleryData.images
+        : [];
+
+  return sourceItems
+    .map((item) => {
+      if (typeof item === 'string') {
+        const src = item.trim();
+        return src ? { src, alt: '' } : null;
+      }
+
+      if (!item || typeof item !== 'object') {
+        return null;
+      }
+
+      const src = typeof item.src === 'string' ? item.src.trim() : '';
+      const alt = typeof item.alt === 'string' ? item.alt.trim() : '';
+
+      if (!src) {
+        return null;
+      }
+
+      return { src, alt };
+    })
+    .filter(Boolean);
+};
+
+const renderGalleryItems = (galleryGrid, galleryItems) => {
+  galleryGrid.innerHTML = galleryItems
+    .map(({ src, alt }, index) => {
+      const safeSrc = escapeHtml(src);
+      const safeAlt = escapeHtml(alt || `Galleri-billede ${index + 1}`);
+
+      return `
+        <li>
+          <button type="button" class="gallery-item" data-lightbox-src="${safeSrc}" data-lightbox-alt="${safeAlt}">
+            <img src="${safeSrc}" alt="${safeAlt}" loading="lazy" />
+          </button>
+        </li>
+      `;
+    })
+    .join('');
+};
+
+const initializeGallery = async () => {
+  if (document.body.dataset.page !== 'galleri') {
+    return;
+  }
+
+  const galleryGrid = document.querySelector('#gallery-grid');
+  const emptyState = document.querySelector('#gallery-empty-state');
+
+  if (!galleryGrid || !emptyState) {
+    return;
+  }
+
+  galleryGrid.innerHTML = '<li><p>Indlæser galleri...</p></li>';
+
+  try {
+    const response = await fetch('/content/gallery.json');
+    if (!response.ok) {
+      throw new Error('Kunne ikke hente galleri-data.');
+    }
+
+    const galleryData = await response.json();
+    const galleryItems = normalizeGalleryItems(galleryData);
+
+    if (!galleryItems.length) {
+      galleryGrid.innerHTML = '';
+      emptyState.hidden = false;
+      return;
+    }
+
+    emptyState.hidden = true;
+    renderGalleryItems(galleryGrid, galleryItems);
+  } catch (error) {
+    const fallbackItems = normalizeGalleryItems(defaultGalleryItems);
+
+    if (!fallbackItems.length) {
+      galleryGrid.innerHTML = '';
+      emptyState.hidden = false;
+      return;
+    }
+
+    emptyState.hidden = true;
+    renderGalleryItems(galleryGrid, fallbackItems);
+  }
+};
+
+initializeGallery();
+
 const initializeGalleryLightbox = () => {
   const lightbox = document.querySelector('#gallery-lightbox');
   const lightboxImage = document.querySelector('#lightbox-image');
@@ -846,32 +970,10 @@ const initializeHomepageSlideshow = () => {
     return;
   }
 
-  const slides = [
-    {
-      src: 'uploads/gallery/mad-1.jpg',
-      alt: 'Billede fra Hestestalden – mad (1 af 6)',
-    },
-    {
-      src: 'uploads/gallery/mad-2.jpg',
-      alt: 'Billede fra Hestestalden – mad (2 af 6)',
-    },
-    {
-      src: 'uploads/gallery/mad-3.jpg',
-      alt: 'Billede fra Hestestalden – mad (3 af 6)',
-    },
-    {
-      src: 'uploads/gallery/mad-4.jpg',
-      alt: 'Billede fra Hestestalden – mad (4 af 6)',
-    },
-    {
-      src: 'uploads/gallery/mad-5.jpg',
-      alt: 'Billede fra Hestestalden – mad (5 af 6)',
-    },
-    {
-      src: 'uploads/gallery/mad-6.jpg',
-      alt: 'Billede fra Hestestalden – mad (6 af 6)',
-    },
-  ];
+  const slides = defaultGalleryItems.map((slide, index) => ({
+    src: slide.src,
+    alt: slide.alt || `Billede fra Hestestalden – mad (${index + 1})`,
+  }));
 
   const rotateInterval = 18000;
   let activeIndex = 0;
