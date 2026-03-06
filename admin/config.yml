@@ -2,7 +2,7 @@ backend:
   name: git-gateway
   branch: main
 
-media_folder: "uploads"
+media_folder: "/uploads"
 public_folder: "/uploads"
 
 collections:
@@ -28,12 +28,12 @@ collections:
                 name: "images"
                 widget: "list"
                 required: false
-                field: { label: "Billede", name: "image", widget: "image", media_folder: "uploads/gallery", public_folder: "/uploads/gallery" }
+                field: { label: "Billede", name: "image", widget: "image", media_folder: "/uploads/gallery", public_folder: "/uploads/gallery" }
               - { label: "PDF", name: "pdf", widget: "file", required: false }
 
   - name: "menu_pdf_stier"
     label: "Menu PDF-stier"
-    media_folder: "uploads"
+    media_folder: "/uploads"
     public_folder: "/uploads"
     files:
       - label: "Menuer og arrangementer"
@@ -62,7 +62,7 @@ collections:
 
   - name: "galleri"
     label: "Galleri"
-    media_folder: "uploads/gallery"
+    media_folder: "/uploads/gallery"
     public_folder: "/uploads/gallery"
     files:
       - label: "Galleri-billeder"
@@ -79,7 +79,7 @@ collections:
 
   - name: "forside_slideshow"
     label: "Forside-slideshow"
-    media_folder: "uploads/gallery"
+    media_folder: "/uploads/gallery"
     public_folder: "/uploads/gallery"
     files:
       - label: "Smagsglimt fra køkkenet"
