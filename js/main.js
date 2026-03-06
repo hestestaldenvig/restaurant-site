@@ -805,6 +805,33 @@ const defaultGalleryItems = [
   },
 ];
 
+const defaultHomepageSlideshowItems = [
+  {
+    src: 'uploads/gallery/mad-1.jpg',
+    alt: 'Smagsglimt fra køkkenet',
+  },
+  {
+    src: 'uploads/gallery/mad-2.jpg',
+    alt: 'Smagsglimt fra køkkenet',
+  },
+  {
+    src: 'uploads/gallery/mad-3.jpg',
+    alt: 'Smagsglimt fra køkkenet',
+  },
+  {
+    src: 'uploads/gallery/mad-4.jpg',
+    alt: 'Smagsglimt fra køkkenet',
+  },
+  {
+    src: 'uploads/gallery/mad-5.jpg',
+    alt: 'Smagsglimt fra køkkenet',
+  },
+  {
+    src: 'uploads/gallery/mad-6.jpg',
+    alt: 'Smagsglimt fra køkkenet',
+  },
+];
+
 const normalizeGalleryItems = (galleryData) => {
   const sourceItems = Array.isArray(galleryData)
     ? galleryData
@@ -958,7 +985,7 @@ const initializeGalleryLightbox = () => {
 initializeGalleryLightbox();
 
 
-const initializeHomepageSlideshow = () => {
+const initializeHomepageSlideshow = async () => {
   if (document.body.dataset.page !== 'forside') {
     return;
   }
@@ -970,10 +997,39 @@ const initializeHomepageSlideshow = () => {
     return;
   }
 
-  const slides = defaultGalleryItems.map((slide, index) => ({
+  let slideshowData = defaultHomepageSlideshowItems;
+
+  try {
+    const response = await fetch('/content/home-slideshow.json');
+    if (!response.ok) {
+      throw new Error('Kunne ikke hente slideshow-data.');
+    }
+
+    const parsedData = await response.json();
+    const normalizedItems = normalizeGalleryItems(parsedData);
+
+    if (normalizedItems.length) {
+      slideshowData = normalizedItems;
+    }
+  } catch (error) {
+    slideshowData = defaultHomepageSlideshowItems;
+  }
+
+  const slides = slideshowData.map((slide, index) => ({
     src: slide.src,
-    alt: slide.alt || `Billede fra Hestestalden – mad (${index + 1})`,
+    alt: slide.alt || `Smagsglimt fra køkkenet (${index + 1})`,
   }));
+
+  if (!slides.length) {
+    return;
+  }
+
+  slideshowImage.src = slides[0].src;
+  slideshowImage.alt = slides[0].alt;
+
+  if (slides.length < 2) {
+    return;
+  }
 
   const rotateInterval = 18000;
   let activeIndex = 0;
