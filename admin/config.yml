@@ -31,63 +31,23 @@ collections:
                 field: { label: "Billede", name: "image", widget: "image" }
               - { label: "PDF", name: "pdf", widget: "file", required: false }
 
-  - name: "menuer"
-    label: "Menuer"
+  - name: "menu_pdf_stier"
+    label: "Menu PDF-stier"
     files:
-      - file: "uploads/menu.pdf"
-        label: "Aftenmenu"
-        name: "aftenmenu"
+      - label: "Menuer og arrangementer"
+        name: "menu_paths"
+        file: "content/menus.json"
         fields:
-          - { label: "PDF fil", name: "file", widget: "file" }
-      - file: "uploads/Menu-frokost.pdf"
-        label: "Frokostmenu"
-        name: "frokostmenu"
-        fields:
-          - { label: "PDF fil", name: "file", widget: "file" }
-
-  - name: "arrangement_menuer"
-    label: "Arrangement-menuer"
-    files:
-      - file: "uploads/Menu - Barnedåb.pdf"
-        label: "Barnedåb"
-        name: "barnedaab"
-        fields:
-          - { label: "PDF fil", name: "file", widget: "file" }
-      - file: "uploads/Menu - Bisættelse.pdf"
-        label: "Bisættelse"
-        name: "bisaettelse"
-        fields:
-          - { label: "PDF fil", name: "file", widget: "file" }
-      - file: "uploads/Menu - Firma arrangement.pdf"
-        label: "Firmaarrangement"
-        name: "firma"
-        fields:
-          - { label: "PDF fil", name: "file", widget: "file" }
-      - file: "uploads/Menu - Fødselsdag.pdf"
-        label: "Fødselsdag"
-        name: "foedselsdag"
-        fields:
-          - { label: "PDF fil", name: "file", widget: "file" }
-      - file: "uploads/Menu - Generalforsamling.pdf"
-        label: "Generalforsamling"
-        name: "generalforsamling"
-        fields:
-          - { label: "PDF fil", name: "file", widget: "file" }
-      - file: "uploads/Menu - Jubilæum.pdf"
-        label: "Jubilæum"
-        name: "jubilaeum"
-        fields:
-          - { label: "PDF fil", name: "file", widget: "file" }
-      - file: "uploads/Menu - Konfirmation.pdf"
-        label: "Konfirmation"
-        name: "konfirmation"
-        fields:
-          - { label: "PDF fil", name: "file", widget: "file" }
-      - file: "uploads/Menu - Mindesammenkomst.pdf"
-        label: "Mindesammenkomst"
-        name: "mindesammenkomst"
-        fields:
-          - { label: "PDF fil", name: "file", widget: "file" }
+          - { label: "Aftenmenu", name: "aftenmenu", widget: "file", media_folder: "uploads", public_folder: "/uploads" }
+          - { label: "Frokostmenu", name: "frokostmenu", widget: "file", media_folder: "uploads", public_folder: "/uploads" }
+          - { label: "Barnedåb", name: "barnedaab", widget: "file", media_folder: "uploads", public_folder: "/uploads" }
+          - { label: "Bisættelse", name: "bisaettelse", widget: "file", media_folder: "uploads", public_folder: "/uploads" }
+          - { label: "Firmaarrangement", name: "firma", widget: "file", media_folder: "uploads", public_folder: "/uploads" }
+          - { label: "Fødselsdag", name: "foedselsdag", widget: "file", media_folder: "uploads", public_folder: "/uploads" }
+          - { label: "Generalforsamling", name: "generalforsamling", widget: "file", media_folder: "uploads", public_folder: "/uploads" }
+          - { label: "Jubilæum", name: "jubilaeum", widget: "file", media_folder: "uploads", public_folder: "/uploads" }
+          - { label: "Konfirmation", name: "konfirmation", widget: "file", media_folder: "uploads", public_folder: "/uploads" }
+          - { label: "Mindesammenkomst", name: "mindesammenkomst", widget: "file", media_folder: "uploads", public_folder: "/uploads" }
 
   - name: "event_pdf"
     label: "Valentins PDF"

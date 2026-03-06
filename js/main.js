@@ -130,6 +130,45 @@ if (document.readyState === 'loading') {
 window.addEventListener('beforeunload', resetBodyScrollLock);
 window.addEventListener('pageshow', closeMobileNavigation);
 
+const menuPdfDefaults = {
+  aftenmenu: '/uploads/menu.pdf',
+  frokostmenu: '/uploads/Menu-frokost.pdf',
+  barnedaab: '/uploads/Menu - Barnedåb.pdf',
+  bisaettelse: '/uploads/Menu - Bisættelse.pdf',
+  firma: '/uploads/Menu - Firma arrangement.pdf',
+  foedselsdag: '/uploads/Menu - Fødselsdag.pdf',
+  generalforsamling: '/uploads/Menu - Generalforsamling.pdf',
+  jubilaeum: '/uploads/Menu - Jubilæum.pdf',
+  konfirmation: '/uploads/Menu - Konfirmation.pdf',
+  mindesammenkomst: '/uploads/Menu - Mindesammenkomst.pdf',
+};
+
+let cachedMenuPdfConfig = null;
+
+const loadMenuPdfConfig = async () => {
+  if (cachedMenuPdfConfig) {
+    return cachedMenuPdfConfig;
+  }
+
+  try {
+    const response = await fetch('/content/menus.json', { cache: 'no-store' });
+    if (!response.ok) {
+      throw new Error(`Kunne ikke hente content/menus.json (${response.status})`);
+    }
+
+    const data = await response.json();
+    cachedMenuPdfConfig = {
+      ...menuPdfDefaults,
+      ...(data && typeof data === 'object' ? data : {}),
+    };
+  } catch (error) {
+    console.warn('Faldt tilbage til standard menu-PDF stier.', error);
+    cachedMenuPdfConfig = { ...menuPdfDefaults };
+  }
+
+  return cachedMenuPdfConfig;
+};
+
 const pdfWorkerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 const pdfGridRenderers = new Map();
 const pdfResizeDebounceMs = 260;
@@ -388,13 +427,15 @@ const initializeMenuPdf = async () => {
     return;
   }
 
+  const menuPdfConfig = await loadMenuPdfConfig();
+
   const menuConfigs = {
     aften: {
-      url: './uploads/menu.pdf',
+      url: menuPdfConfig.aftenmenu || menuPdfDefaults.aftenmenu,
       label: 'Aftenmenu',
     },
     frokost: {
-      url: './uploads/Menu-frokost.pdf',
+      url: menuPdfConfig.frokostmenu || menuPdfDefaults.frokostmenu,
       label: 'Frokostmenu',
     },
   };
@@ -481,6 +522,26 @@ const initializeArrangementSelector = async () => {
   }
 
   const arrangementRenderers = new Map();
+  const menuPdfConfig = await loadMenuPdfConfig();
+
+  arrangementSections.forEach((sectionElement) => {
+    const menuCard = sectionElement.querySelector('.arrangement-menu-card');
+    if (!menuCard) {
+      return;
+    }
+
+    const configKey = menuCard.dataset.menuConfigKey;
+    const pdfPath = configKey && menuPdfConfig[configKey] ? menuPdfConfig[configKey] : menuCard.dataset.arrangementPdf;
+    if (!pdfPath) {
+      return;
+    }
+
+    menuCard.dataset.arrangementPdf = pdfPath;
+    const pdfLink = sectionElement.querySelector('.arrangement-pdf-link');
+    if (pdfLink) {
+      pdfLink.href = encodeURI(pdfPath);
+    }
+  });
 
   const hideAllSections = () => {
     arrangementSections.forEach((section) => {
