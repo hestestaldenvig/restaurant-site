@@ -145,6 +145,36 @@ const menuPdfDefaults = {
 
 let cachedMenuPdfConfig = null;
 
+const normalizeMenuPdfPath = (pathValue) => {
+  if (typeof pathValue !== 'string') {
+    return '';
+  }
+
+  const trimmedPath = pathValue.trim();
+  if (!trimmedPath) {
+    return '';
+  }
+
+  if (/^https?:\/\//i.test(trimmedPath)) {
+    return trimmedPath;
+  }
+
+  const withoutQueryHash = trimmedPath.split(/[?#]/)[0].replace(/\\/g, '/');
+  const queryHashSuffix = trimmedPath.slice(withoutQueryHash.length);
+  const compactPath = withoutQueryHash.replace(/\/+/g, '/');
+  let normalizedPath = compactPath.startsWith('/') ? compactPath : `/${compactPath}`;
+
+  if (/^\/uploads\/+/i.test(normalizedPath)) {
+    normalizedPath = normalizedPath.replace(/^\/uploads\/+/i, '/uploads/');
+  }
+
+  if (/^\/uploads\/uploads\//i.test(normalizedPath)) {
+    normalizedPath = normalizedPath.replace(/^\/uploads\/uploads\//i, '/uploads/');
+  }
+
+  return `${normalizedPath}${queryHashSuffix}`;
+};
+
 const loadMenuPdfConfig = async () => {
   if (cachedMenuPdfConfig) {
     return cachedMenuPdfConfig;
@@ -428,14 +458,27 @@ const initializeMenuPdf = async () => {
   }
 
   const menuPdfConfig = await loadMenuPdfConfig();
+  const isDevHost = ['localhost', '127.0.0.1', '0.0.0.0'].includes(window.location.hostname) || window.location.protocol === 'file:';
+
+  const getMenuPdfPath = (configKey) => {
+    const rawPath = menuPdfConfig[configKey];
+    const resolvedPath = normalizeMenuPdfPath(rawPath);
+
+    if (isDevHost) {
+      console.log(`[menu.html] ${configKey} raw JSON value:`, rawPath);
+      console.log(`[menu.html] ${configKey} resolved PDF path:`, resolvedPath);
+    }
+
+    return resolvedPath;
+  };
 
   const menuConfigs = {
     aften: {
-      url: menuPdfConfig.aftenmenu || menuPdfDefaults.aftenmenu,
+      url: getMenuPdfPath('aftenmenu'),
       label: 'Aftenmenu',
     },
     frokost: {
-      url: menuPdfConfig.frokostmenu || menuPdfDefaults.frokostmenu,
+      url: getMenuPdfPath('frokostmenu'),
       label: 'Frokostmenu',
     },
   };
@@ -478,7 +521,7 @@ const initializeMenuPdf = async () => {
     if (!menuRenderers.has(menuKey)) {
       const renderer = await renderPdfToGrid(activeConfig.url, menuPages, menuStatus, {
         loadingMessage: `Indlæser ${activeConfig.label.toLowerCase()}...`,
-        errorMessage: `${activeConfig.label} kan ikke vises lige nu. Brug knapperne herover eller kontakt os.`,
+        errorMessage: `${activeConfig.label} kan ikke vises lige nu. Fejlsti: ${activeConfig.url}`,
         ariaLabelPrefix: `${activeConfig.label} side`,
       });
       menuRenderers.set(menuKey, renderer);
