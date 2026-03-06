@@ -2,8 +2,8 @@ backend:
   name: git-gateway
   branch: main
 
-media_folder: "uploads"
-public_folder: "/uploads"
+media_folder: "uploads/gallery"
+public_folder: "/uploads/gallery"
 
 collections:
   - name: "news"
@@ -107,14 +107,11 @@ collections:
         hint: "Upload galleribilleder her. Brug uploads/gallery som mappe for nye filer."
         fields:
           - label: "Billeder"
-            name: ""
+            name: "images"
             widget: "list"
-            summary: "{{fields.src}}"
-            allow_add: true
-            collapsed: false
             fields:
-              - { label: "Billede", name: "src", widget: "image", required: true, media_folder: "uploads/gallery", public_folder: "/uploads/gallery" }
-              - { label: "Alt-tekst", name: "alt", widget: "string", required: false }
+              - { label: "Billede", name: "src", widget: "image" }
+              - { label: "Alt tekst", name: "alt", widget: "string", required: false }
 
   - name: "forside_slideshow"
     label: "Forside-slideshow"
@@ -124,12 +121,9 @@ collections:
         file: "content/home-slideshow.json"
         hint: "Disse billeder vises kun på forsiden under 'Smagsglimt fra køkkenet'."
         fields:
-          - label: "Slides"
-            name: ""
+          - label: "Slideshow billeder"
+            name: "images"
             widget: "list"
-            summary: "{{fields.src}}"
-            allow_add: true
-            collapsed: false
             fields:
-              - { label: "Billede", name: "src", widget: "image", required: true, media_folder: "uploads/gallery", public_folder: "/uploads/gallery" }
-              - { label: "Alt-tekst", name: "alt", widget: "string", required: false }
+              - { label: "Billede", name: "src", widget: "image" }
+              - { label: "Alt tekst", name: "alt", widget: "string", required: false }

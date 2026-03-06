@@ -1,26 +1,10 @@
-[
-  {
-    "src": "uploads/gallery/mad-1.jpg",
-    "alt": "Ret fra Hestestalden med sæsonens råvarer"
-  },
-  {
-    "src": "uploads/gallery/mad-2.jpg",
-    "alt": "Hjemmelavet servering fra køkkenet i Hestestalden"
-  },
-  {
-    "src": "uploads/gallery/mad-3.jpg",
-    "alt": "Anrettet ret fra Hestestalden i varme nuancer"
-  },
-  {
-    "src": "uploads/gallery/mad-4.jpg",
-    "alt": "Rustik tallerkenservering fra Hestestalden"
-  },
-  {
-    "src": "uploads/gallery/mad-5.jpg",
-    "alt": "Velsmagende ret fra Hestestalden til frokost og aften"
-  },
-  {
-    "src": "uploads/gallery/mad-6.jpg",
-    "alt": "Klassisk madoplevelse fra Hestestalden"
-  }
-]
+{
+  "images": [
+    { "src": "/uploads/gallery/mad-1.jpg", "alt": "Ret fra Hestestalden" },
+    { "src": "/uploads/gallery/mad-2.jpg", "alt": "Ret fra Hestestalden" },
+    { "src": "/uploads/gallery/mad-3.jpg", "alt": "Ret fra Hestestalden" },
+    { "src": "/uploads/gallery/mad-4.jpg", "alt": "Ret fra Hestestalden" },
+    { "src": "/uploads/gallery/mad-5.jpg", "alt": "Ret fra Hestestalden" },
+    { "src": "/uploads/gallery/mad-6.jpg", "alt": "Ret fra Hestestalden" }
+  ]
+}

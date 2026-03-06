@@ -780,57 +780,74 @@ initializeSingleNews();
 
 const defaultGalleryItems = [
   {
-    src: 'uploads/gallery/mad-1.jpg',
+    src: '/uploads/gallery/mad-1.jpg',
     alt: 'Ret fra Hestestalden med sæsonens råvarer',
   },
   {
-    src: 'uploads/gallery/mad-2.jpg',
+    src: '/uploads/gallery/mad-2.jpg',
     alt: 'Hjemmelavet servering fra køkkenet i Hestestalden',
   },
   {
-    src: 'uploads/gallery/mad-3.jpg',
+    src: '/uploads/gallery/mad-3.jpg',
     alt: 'Anrettet ret fra Hestestalden i varme nuancer',
   },
   {
-    src: 'uploads/gallery/mad-4.jpg',
+    src: '/uploads/gallery/mad-4.jpg',
     alt: 'Rustik tallerkenservering fra Hestestalden',
   },
   {
-    src: 'uploads/gallery/mad-5.jpg',
+    src: '/uploads/gallery/mad-5.jpg',
     alt: 'Velsmagende ret fra Hestestalden til frokost og aften',
   },
   {
-    src: 'uploads/gallery/mad-6.jpg',
+    src: '/uploads/gallery/mad-6.jpg',
     alt: 'Klassisk madoplevelse fra Hestestalden',
   },
 ];
 
 const defaultHomepageSlideshowItems = [
   {
-    src: 'uploads/gallery/mad-1.jpg',
+    src: '/uploads/gallery/mad-1.jpg',
     alt: 'Smagsglimt fra køkkenet',
   },
   {
-    src: 'uploads/gallery/mad-2.jpg',
+    src: '/uploads/gallery/mad-2.jpg',
     alt: 'Smagsglimt fra køkkenet',
   },
   {
-    src: 'uploads/gallery/mad-3.jpg',
+    src: '/uploads/gallery/mad-3.jpg',
     alt: 'Smagsglimt fra køkkenet',
   },
   {
-    src: 'uploads/gallery/mad-4.jpg',
+    src: '/uploads/gallery/mad-4.jpg',
     alt: 'Smagsglimt fra køkkenet',
   },
   {
-    src: 'uploads/gallery/mad-5.jpg',
+    src: '/uploads/gallery/mad-5.jpg',
     alt: 'Smagsglimt fra køkkenet',
   },
   {
-    src: 'uploads/gallery/mad-6.jpg',
+    src: '/uploads/gallery/mad-6.jpg',
     alt: 'Smagsglimt fra køkkenet',
   },
 ];
+
+const normalizeImagePath = (src) => {
+  if (typeof src !== 'string') {
+    return '';
+  }
+
+  const trimmedSrc = src.trim();
+  if (!trimmedSrc) {
+    return '';
+  }
+
+  if (/^(?:https?:)?\/\//.test(trimmedSrc) || trimmedSrc.startsWith('/')) {
+    return trimmedSrc;
+  }
+
+  return `/${trimmedSrc}`;
+};
 
 const normalizeGalleryItems = (galleryData) => {
   const sourceItems = Array.isArray(galleryData)
@@ -844,7 +861,7 @@ const normalizeGalleryItems = (galleryData) => {
   return sourceItems
     .map((item) => {
       if (typeof item === 'string') {
-        const src = item.trim();
+        const src = normalizeImagePath(item);
         return src ? { src, alt: '' } : null;
       }
 
@@ -852,7 +869,7 @@ const normalizeGalleryItems = (galleryData) => {
         return null;
       }
 
-      const src = typeof item.src === 'string' ? item.src.trim() : '';
+      const src = normalizeImagePath(item.src);
       const alt = typeof item.alt === 'string' ? item.alt.trim() : '';
 
       if (!src) {
