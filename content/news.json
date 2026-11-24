@@ -80,6 +80,14 @@
       "excerpt": "Kom en til hyggelig Mortens Aften i Stalden.",
       "body": "Vi serverer en traditionel middag - du kan vælge 2 eller 3 retter.",
       "pdf": "/uploads/mortens-aften-2026.pdf"
+    },
+    {
+      "id": "julebuffet2026",
+      "title": "Julebuffet julen 2026",
+      "date": "2026-11-24",
+      "excerpt": "Serveres i restauranten eller sælges ud-af-huset,",
+      "body": "Klassisk julebuffet.",
+      "pdf": "/uploads/julebuffet.pdf"
     }
   ]
 }
